@@ -1,0 +1,129 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include "Image_Class.h"
+using namespace std;
+
+void Starting_Menu ()
+{
+    cout << "\n";
+    cout << "============ Menu ============\n";
+    cout << "1. Load new image\n";
+    cout << "2. Grayscale\n";
+    cout << "3. Black and White\n";
+    cout << "4. Invert\n";
+    cout << "5. Add frame\n";
+    cout << "6. Flip\n";
+    cout << "7. Rotate\n";
+    cout << "8. Darken / Lighten\n";
+    cout << "9. Resize\n";
+    cout << "10. Save\n";
+    cout << "11. Exit\n";
+}
+
+int main()
+{
+    cout << "Welcome To Baby Photoshop\n";
+    cout << "Choose a number from the following menu\n";
+    bool running = true;
+    string filename = "";
+    bool Is_Image_Loaded = false;
+
+    while (running)
+    {
+        Starting_Menu();
+        int User_Choice;
+        if (!(cin >> User_Choice)) {
+            cout << "Invalid input!\n";
+            cout << "Please enter a number\n";
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
+
+        switch (User_Choice) {
+            case 1: {
+                cout << "Enter Image Filename: ";
+                cin >> filename;
+
+                ifstream file(filename);
+                if (!file.is_open()) {
+                cout << "File does not exist!\n";
+                cout << "Try Again!\n";
+                break;
+                }
+                file.close();
+
+                bool Is_Ext_valid = false;
+                size_t Dot_Ind = filename.find_last_of(".");
+                if (Dot_Ind != string::npos) {
+                    string ext = filename.substr(Dot_Ind);
+                    if (ext == ".jpeg" || ext == ".jpg" || ext == ".png" || ext == ".bmp") {
+                        Is_Ext_valid = true;
+                    }
+                }
+
+                if (Is_Ext_valid) {
+                    Image image(filename);
+                    cout << "Image loaded successfully!\n";
+                } else {
+                    cout << "Invalid file extension!\n";
+                }
+                break;
+            }
+            case 2:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 3:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 4:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 5:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 6:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 7:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 8:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 9:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 10:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 11:
+                cout << "Exiting the program\n";
+                running = false;
+                break;
+            default:
+                cout << "ERROR in the inputs";
+        }
+    }
+    
+    return 0;
+}
