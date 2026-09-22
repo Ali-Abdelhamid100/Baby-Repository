@@ -28,6 +28,7 @@ int main()
     bool running = true;
     string filename = "";
     bool Is_Image_Loaded = false;
+    Image image;
 
     while (running)
     {
@@ -64,7 +65,8 @@ int main()
                 }
 
                 if (Is_Ext_valid) {
-                    Image image(filename);
+                    image.loadNewImage(filename);
+                    Is_Image_Loaded = true;
                     cout << "Image loaded successfully!\n";
                 } else {
                     cout << "Invalid file extension!\n";
@@ -111,11 +113,18 @@ int main()
                     cout << "Please load an image at first!\n";
                 }
                 break;
-            case 10:
+            case 10:{
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
+                } else {
+                    cout << "Please enter image name to store new image\n";
+                    cout << "and with one of the following extensions: .jpg, .bmp, .png, .jpeg\n";
+
+                    cin >> filename;
+                    image.saveImage(filename);
                 }
                 break;
+            }
             case 11:
                 cout << "Exiting the program\n";
                 running = false;
