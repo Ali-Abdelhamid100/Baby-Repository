@@ -2,7 +2,10 @@
 #include <fstream>
 #include <string>
 #include "Image_Class.h"
+#include "ImageProcessingDemo.cpp"
 using namespace std;
+
+void grayScale(Image& image) ;// declaration grayScale function 
 
 void Starting_Menu ()
 {
@@ -76,6 +79,11 @@ int main()
             case 2:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
+        
+                }
+                else {
+                    grayScale(image);  // calling grayScale function
+                    cout << "GrayScale applied successfully!\n";
                 }
                 break;
             case 3:
