@@ -6,8 +6,9 @@ using namespace std;
 
 void Starting_Menu ()
 {
-    cout << "\n";
-    cout << "============ Menu ============\n";
+    cout << "==============================\n";
+    cout << "===========  Menu  ===========\n";
+    cout << "==============================\n";
     cout << "1. Load new image\n";
     cout << "2. Grayscale\n";
     cout << "3. Black and White\n";
@@ -19,6 +20,69 @@ void Starting_Menu ()
     cout << "9. Resize\n";
     cout << "10. Save\n";
     cout << "11. Exit\n";
+}
+
+void Add_frame (Image& image)
+{
+    int frame_type;
+    cout << "Enter the Frame type : 1 for Single frame   2 for Double frame\n";
+    cin >> frame_type;
+    int R, G, B;
+    int R1, G1, B1;
+    int R2, G2, B2;
+    int frame_size;
+    int frame1Size, frame2Size;
+
+    if (frame_type == 1) {
+        cout << "Enter the size of the frame\n";
+        cin >> frame_size;
+        cout << "Enter the values of R G B respectively :\n";
+        cin >> R >> G >> B;
+        for (int i = 0 ; i < image.width ; i++) {
+            for (int j = 0 ; j < image.height ; j++){
+                for (int k = 0 ; k < image.channels ; k++) {
+                    if (i < frame_size || i >= image.width - frame_size || j < frame_size || j >= image.height - frame_size) {
+                        image(i,j,0) = R;
+                        image(i,j,1) = G;
+                        image(i,j,2) = B;
+                    }
+                }
+            }
+        }
+    } else if (frame_type == 2) {
+        cout << "Enter the size of the outer frame then the size of the inner frame\n";
+        cin >> frame1Size >> frame2Size ;
+        cout << "Enter the values of R G B respectively of the outer frame:\n";
+        cin >> R1 >> G1 >> B1;
+        cout << "Enter the values of R G B respectively of the inner frame:\n";
+        cin >> R2 >> G2 >> B2;
+        
+        for (int i = 0 ; i < image.width ; i++) {
+            for (int j = 0 ; j < image.height ; j++){
+                for (int k = 0 ; k < image.channels ; k++) {
+                    if (i < frame1Size || i >= image.width - frame1Size || j < frame1Size || j >= image.height - frame1Size) {
+                        image(i,j,0) = R1;
+                        image(i,j,1) = G1;
+                        image(i,j,2) = B2;
+                    }
+                }
+            }
+        }
+        for (int i = frame1Size ; i < image.width - frame1Size ; i++) {
+            for (int j = frame1Size ; j < image.height - frame1Size ; j++) {
+                for (int k = 0 ; k < image.channels ; k++) {
+                    if ((i < frame1Size + frame2Size && i >= frame1Size) || (i >= image.width - (frame1Size + frame2Size) && i < image.width - frame1Size)
+                     || (j < frame1Size + frame2Size && j >= frame1Size) || (j >= image.height - (frame1Size + frame2Size) && j < image.height - frame1Size)) {
+                        image(i,j,0) = R2;
+                        image(i,j,1) = G2;
+                        image(i,j,2) = B2;
+                    }
+                }
+            }
+        }
+    } else {
+        cout << "Error in the inputs, please try again!\n";
+    }
 }
 
 int main()
@@ -86,11 +150,14 @@ int main()
             case 4:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
-                }
+                } 
                 break;
             case 5:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
+                } else {
+                    Add_frame (image);
+                    cout << "Frame added successfully\n";
                 }
                 break;
             case 6:
@@ -119,6 +186,7 @@ int main()
                 } else {
                     cout << "Please enter image name to store new image\n";
                     cout << "and with one of the following extensions: .jpg, .bmp, .png, .jpeg\n";
+                    cout << "Your new image saved successfully\n";
 
                     cin >> filename;
                     image.saveImage(filename);
