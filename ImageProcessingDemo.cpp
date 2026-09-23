@@ -3,8 +3,7 @@
 #include <iostream>
 using namespace std;
 #include "Image_Class.h"
-
-void grayScale(Image& image){
+/* void grayScale(Image& image){
     
     // Loop through all pixels in image
 
@@ -27,4 +26,4 @@ void grayScale(Image& image){
             image.getPixel(i,j,2) = avg ;
         }
     }
-}
+}*/
