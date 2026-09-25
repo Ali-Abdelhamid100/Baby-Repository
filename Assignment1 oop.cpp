@@ -70,6 +70,15 @@ void Starting_Menu ()
     cout << "10. Save\n";
     cout << "11. Exit\n";
 }
+void invertfilter (Image& image) {
+    for (int i = 0; i < image.width; ++i) {
+        for (int j = 0; j < image.height; ++j) {
+            for (int k = 0; k < 3; ++k) {
+                image(i, j, k) = 255 - image(i, j, k); // Invert pixel value
+            }
+        }
+    }
+}
 
 int main()
 {
@@ -145,6 +154,9 @@ int main()
             case 4:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
+                } else {
+                    invertfilter(image);
+                    cout << "Image inverted successfully!\n";
                 }
                 break;
             case 5:
