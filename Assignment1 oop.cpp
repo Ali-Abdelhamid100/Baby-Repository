@@ -2,14 +2,30 @@
 #include <fstream>
 #include <string>
 #include "Image_Class.h"
-#include "ImageProcessingDemo.cpp"
 using namespace std;
 
-<<<<<<< HEAD
-void black_and_white(Image& image){
+void Starting_Menu ()
+{
+    cout << "==============================\n";
+    cout << "===========  Menu  ===========\n";
+    cout << "==============================\n";
+    cout << "1. Load new image\n";
+    cout << "2. Grayscale\n";
+    cout << "3. Black and White\n";
+    cout << "4. Invert\n";
+    cout << "5. Add frame\n";
+    cout << "6. Flip\n";
+    cout << "7. Rotate\n";
+    cout << "8. Darken / Lighten\n";
+    cout << "9. Resize\n";
+    cout << "10. Save\n";
+    cout << "11. Exit\n";
+}
+
+void black_and_white(Image& image) {
     int threshold = 128;
-    for(int i = 0; i < image.width; i++){
-        for(int j = 0; j < image.height; j++){
+    for(int i = 0; i < image.width; i++) {
+        for(int j = 0; j < image.height; j++) {
             unsigned int avg = 0;
             for(int k = 0; k < image.channels; k++)
             {
@@ -26,7 +42,9 @@ void black_and_white(Image& image){
                 image.setPixel(i, j, 1, 255);
                 image.setPixel(i, j, 2, 255);
             }
-=======
+        }
+    }
+}
 
 void grayScale(Image& image){
     
@@ -49,27 +67,10 @@ void grayScale(Image& image){
             image.getPixel(i,j,0)= avg ;
             image.getPixel(i,j,1)= avg ;
             image.getPixel(i,j,2) = avg ;
->>>>>>> f25cd65798d2cea22e3b37e6cdacccb71b727c06
         }
     }
 }
 
-void Starting_Menu ()
-{
-    cout << "\n";
-    cout << "============ Menu ============\n";
-    cout << "1. Load new image\n";
-    cout << "2. Grayscale\n";
-    cout << "3. Black and White\n";
-    cout << "4. Invert\n";
-    cout << "5. Add frame\n";
-    cout << "6. Flip\n";
-    cout << "7. Rotate\n";
-    cout << "8. Darken / Lighten\n";
-    cout << "9. Resize\n";
-    cout << "10. Save\n";
-    cout << "11. Exit\n";
-}
 void invertfilter (Image& image) {
     for (int i = 0; i < image.width; ++i) {
         for (int j = 0; j < image.height; ++j) {
@@ -77,6 +78,63 @@ void invertfilter (Image& image) {
                 image(i, j, k) = 255 - image(i, j, k); // Invert pixel value
             }
         }
+    }
+}
+
+void Add_frame (Image& image)
+{
+    int frame_type;
+    cout << "Enter the Frame type : 1 for Single frame   2 for Double frame\n";
+    cin >> frame_type;
+    int R, G, B;
+    int R1, G1, B1;
+    int R2, G2, B2;
+    int frame_size;
+    int frame1Size, frame2Size;
+
+    if (frame_type == 1) {
+        cout << "Enter the size of the frame\n";
+        cin >> frame_size;
+        cout << "Enter the values of R G B respectively :\n";
+        cin >> R >> G >> B;
+        for (int i = 0 ; i < image.width ; i++) {
+            for (int j = 0 ; j < image.height ; j++){
+                if (i < frame_size || i >= image.width - frame_size || j < frame_size || j >= image.height - frame_size) {
+                    image(i,j,0) = R;
+                    image(i,j,1) = G;
+                    image(i,j,2) = B;
+                }
+            }
+        }
+    } else if (frame_type == 2) {
+        cout << "Enter the size of the outer frame then the size of the inner frame\n";
+        cin >> frame1Size >> frame2Size ;
+        cout << "Enter the values of R G B respectively of the outer frame:\n";
+        cin >> R1 >> G1 >> B1;
+        cout << "Enter the values of R G B respectively of the inner frame:\n";
+        cin >> R2 >> G2 >> B2;
+        
+        for (int i = 0 ; i < image.width ; i++) {
+            for (int j = 0 ; j < image.height ; j++) {
+                if (i < frame1Size || i >= image.width - frame1Size || j < frame1Size || j >= image.height - frame1Size) {
+                    image(i,j,0) = R1;
+                    image(i,j,1) = G1;
+                    image(i,j,2) = B1;
+                }
+            }
+        }
+        for (int i = frame1Size ; i < image.width - frame1Size ; i++) {
+            for (int j = frame1Size ; j < image.height - frame1Size ; j++) {
+                if ((i < frame1Size + frame2Size && i >= frame1Size) || (i >= image.width - (frame1Size + frame2Size) && i < image.width - frame1Size)
+                 || (j < frame1Size + frame2Size && j >= frame1Size) || (j >= image.height - (frame1Size + frame2Size) && j < image.height - frame1Size)) {
+                    image(i,j,0) = R2;
+                    image(i,j,1) = G2;
+                    image(i,j,2) = B2;
+                }
+            }
+        }
+    } else {
+        cout << "Error in the inputs, please try again!\n";
     }
 }
 
@@ -135,9 +193,7 @@ int main()
             case 2:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
-        
-                }
-                else {
+                } else {
                     grayScale(image);  // calling grayScale function
                     cout << "GrayScale applied successfully!\n";
                 }
@@ -145,8 +201,7 @@ int main()
             case 3:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
-                }
-                else{
+                } else{
                     black_and_white(image);
                     cout << "Black and White applied successfully!\n";
                 }
@@ -162,6 +217,9 @@ int main()
             case 5:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
+                } else {
+                    Add_frame (image);
+                    cout << "Frame added successfully\n";
                 }
                 break;
             case 6:
@@ -193,6 +251,7 @@ int main()
 
                     cin >> filename;
                     image.saveImage(filename);
+                    cout << "Your new image saved successfully\n";
                 }
                 break;
             }

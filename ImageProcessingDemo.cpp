@@ -1,4 +1,4 @@
-// A demo for converting image to gray scale
+// A demo for adding frame
 
 #include <iostream>
 using namespace std;
@@ -7,7 +7,7 @@ using namespace std;
     
     // Loop through all pixels in image
 
-<<<<<<< HEAD
+
 // int main() {
 //     string filename;
 //     cout << "Pls enter colored image name to turn to gray scale: ";
@@ -61,4 +61,3 @@ using namespace std;
         }
     }
 }*/
->>>>>>> f25cd65798d2cea22e3b37e6cdacccb71b727c06
