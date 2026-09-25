@@ -40,12 +40,10 @@ void Add_frame (Image& image)
         cin >> R >> G >> B;
         for (int i = 0 ; i < image.width ; i++) {
             for (int j = 0 ; j < image.height ; j++){
-                for (int k = 0 ; k < image.channels ; k++) {
-                    if (i < frame_size || i >= image.width - frame_size || j < frame_size || j >= image.height - frame_size) {
-                        image(i,j,0) = R;
-                        image(i,j,1) = G;
-                        image(i,j,2) = B;
-                    }
+                if (i < frame_size || i >= image.width - frame_size || j < frame_size || j >= image.height - frame_size) {
+                    image(i,j,0) = R;
+                    image(i,j,1) = G;
+                    image(i,j,2) = B;
                 }
             }
         }
@@ -58,25 +56,21 @@ void Add_frame (Image& image)
         cin >> R2 >> G2 >> B2;
         
         for (int i = 0 ; i < image.width ; i++) {
-            for (int j = 0 ; j < image.height ; j++){
-                for (int k = 0 ; k < image.channels ; k++) {
-                    if (i < frame1Size || i >= image.width - frame1Size || j < frame1Size || j >= image.height - frame1Size) {
-                        image(i,j,0) = R1;
-                        image(i,j,1) = G1;
-                        image(i,j,2) = B2;
-                    }
+            for (int j = 0 ; j < image.height ; j++) {
+                if (i < frame1Size || i >= image.width - frame1Size || j < frame1Size || j >= image.height - frame1Size) {
+                    image(i,j,0) = R1;
+                    image(i,j,1) = G1;
+                    image(i,j,2) = B1;
                 }
             }
         }
         for (int i = frame1Size ; i < image.width - frame1Size ; i++) {
             for (int j = frame1Size ; j < image.height - frame1Size ; j++) {
-                for (int k = 0 ; k < image.channels ; k++) {
-                    if ((i < frame1Size + frame2Size && i >= frame1Size) || (i >= image.width - (frame1Size + frame2Size) && i < image.width - frame1Size)
-                     || (j < frame1Size + frame2Size && j >= frame1Size) || (j >= image.height - (frame1Size + frame2Size) && j < image.height - frame1Size)) {
-                        image(i,j,0) = R2;
-                        image(i,j,1) = G2;
-                        image(i,j,2) = B2;
-                    }
+                if ((i < frame1Size + frame2Size && i >= frame1Size) || (i >= image.width - (frame1Size + frame2Size) && i < image.width - frame1Size)
+                 || (j < frame1Size + frame2Size && j >= frame1Size) || (j >= image.height - (frame1Size + frame2Size) && j < image.height - frame1Size)) {
+                    image(i,j,0) = R2;
+                    image(i,j,1) = G2;
+                    image(i,j,2) = B2;
                 }
             }
         }
