@@ -2,7 +2,34 @@
 #include <fstream>
 #include <string>
 #include "Image_Class.h"
+#include "ImageProcessingDemo.cpp"
 using namespace std;
+
+
+void grayScale(Image& image){
+    
+    // Loop through all pixels in image
+
+    for(int i=0 ; i< image.width ; i++)   
+    {
+        for (int j=0 ; j < image.height ; j++)     
+          {
+            unsigned int avg = 0 ;
+
+           // Get RGB values
+            for(int k=0 ; k < 3 ;k++)
+            {
+               avg += image(i,j,k);
+            }
+            avg /= 3;
+
+            // Set all RGB to average value
+            image.getPixel(i,j,0)= avg ;
+            image.getPixel(i,j,1)= avg ;
+            image.getPixel(i,j,2) = avg ;
+        }
+    }
+}
 
 void Starting_Menu ()
 {
@@ -76,6 +103,11 @@ int main()
             case 2:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
+        
+                }
+                else {
+                    grayScale(image);  // calling grayScale function
+                    cout << "GrayScale applied successfully!\n";
                 }
                 break;
             case 3:
