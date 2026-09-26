@@ -238,7 +238,7 @@ int main()
                     cout << "Please load an image at first!\n";
                 } else {
                     Add_frame (image);
-                    cout << "Frame added successfully\n";
+                    cout << "Frame added successfully!\n";
                 }
                 break;
             case 6:
@@ -261,7 +261,7 @@ int main()
                     cout << "Please load an image at first!\n";
                 } else {
                     resize (image);
-                    cout << "Image resized successfully\n";
+                    cout << "Image resized successfully!\n";
                 }
                 break;
             case 10:{
@@ -273,7 +273,7 @@ int main()
 
                     cin >> filename;
                     image.saveImage(filename);
-                    cout << "Your new image saved successfully\n";
+                    cout << "Your new image is saved successfully!\n";
                 }
                 break;
             }
