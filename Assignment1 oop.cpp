@@ -181,10 +181,10 @@ int main()
         switch (User_Choice) {
             case 1: {
                 cout << "Enter Image Filename:\n";
-                cin >> filename;
+                getline(cin >> ws, filename);
 
                 ifstream file(filename);
-                if (!file.is_open()) {
+                if (!file) {
                 cout << "File does not exist!\n";
                 cout << "Try Again!\n";
                 break;
