@@ -22,7 +22,30 @@ void Starting_Menu ()
     cout << "11. Exit\n";
 }
 
-void black_and_white(Image& image) {
+void grayScale (Image& image) {
+
+    for(int i = 0 ; i < image.width ; i++)   
+    {
+        for (int j = 0 ; j < image.height ; j++)     
+          {
+            unsigned int avg = 0 ;
+
+           // Get RGB values
+            for(int k=0 ; k < 3 ;k++)
+            {
+               avg += image(i,j,k);
+            }
+            avg /= 3;
+
+            // Set all RGB to average value
+            image.getPixel(i,j,0)= avg ;
+            image.getPixel(i,j,1)= avg ;
+            image.getPixel(i,j,2) = avg ;
+        }
+    }
+}
+
+void black_and_white (Image& image) {
     int threshold = 128;
     for(int i = 0; i < image.width; i++) {
         for(int j = 0; j < image.height; j++) {
@@ -46,34 +69,9 @@ void black_and_white(Image& image) {
     }
 }
 
-void grayScale(Image& image){
-    
-    // Loop through all pixels in image
-
-    for(int i=0 ; i< image.width ; i++)   
-    {
-        for (int j=0 ; j < image.height ; j++)     
-          {
-            unsigned int avg = 0 ;
-
-           // Get RGB values
-            for(int k=0 ; k < 3 ;k++)
-            {
-               avg += image(i,j,k);
-            }
-            avg /= 3;
-
-            // Set all RGB to average value
-            image.getPixel(i,j,0)= avg ;
-            image.getPixel(i,j,1)= avg ;
-            image.getPixel(i,j,2) = avg ;
-        }
-    }
-}
-
-void invertfilter (Image& image) {
-    for (int i = 0; i < image.width; ++i) {
-        for (int j = 0; j < image.height; ++j) {
+void invert (Image& image) {
+    for (int i = 0 ; i < image.width ; ++i) {
+        for (int j = 0 ; j < image.height ; ++j) {
             for (int k = 0; k < 3; ++k) {
                 image(i, j, k) = 255 - image(i, j, k); // Invert pixel value
             }
@@ -95,7 +93,7 @@ void Add_frame (Image& image)
     if (frame_type == 1) {
         cout << "Enter the size of the frame\n";
         cin >> frame_size;
-        cout << "Enter the values of R G B respectively :\n";
+        cout << "Enter the values of R G B respectively:\n";
         cin >> R >> G >> B;
         for (int i = 0 ; i < image.width ; i++) {
             for (int j = 0 ; j < image.height ; j++){
@@ -107,7 +105,7 @@ void Add_frame (Image& image)
             }
         }
     } else if (frame_type == 2) {
-        cout << "Enter the size of the outer frame then the size of the inner frame\n";
+        cout << "Enter the size of the outer frame then the size of the inner frame:\n";
         cin >> frame1Size >> frame2Size ;
         cout << "Enter the values of R G B respectively of the outer frame:\n";
         cin >> R1 >> G1 >> B1;
@@ -138,10 +136,31 @@ void Add_frame (Image& image)
     }
 }
 
+
+
+void resize (Image& image) {
+    int new_width, new_height;
+    cout << "Enter the new width and the new height respectively:\n";
+    cin >> new_width >> new_height;
+    Image resized_image(new_width, new_height);
+    for (int i = 0 ; i < new_width ; i++) {
+        for (int j = 0 ; j < new_height ; j++) {
+            int old_w_ind = (i * image.width) / new_width;
+            int old_h_ind = (j * image.height) / new_height;
+
+            for (int k = 0 ; k < image.channels ; k++) {
+                unsigned char img_pixel = image(old_w_ind,old_h_ind,k);
+                resized_image.getPixel(i,j,k) = img_pixel;
+            }
+        }
+    }
+    image = resized_image;
+}
+
 int main()
 {
-    cout << "Welcome To Baby Photoshop\n";
-    cout << "Choose a number from the following menu\n";
+    cout << "Welcome To Baby Photoshop!\n";
+    cout << "Choose a number from the following menu:\n";
     bool running = true;
     string filename = "";
     bool Is_Image_Loaded = false;
@@ -161,7 +180,7 @@ int main()
 
         switch (User_Choice) {
             case 1: {
-                cout << "Enter Image Filename: ";
+                cout << "Enter Image Filename:\n";
                 cin >> filename;
 
                 ifstream file(filename);
@@ -176,7 +195,7 @@ int main()
                 size_t Dot_Ind = filename.find_last_of(".");
                 if (Dot_Ind != string::npos) {
                     string ext = filename.substr(Dot_Ind);
-                    if (ext == ".jpeg" || ext == ".jpg" || ext == ".png" || ext == ".bmp") {
+                    if (ext == ".jpeg" || ext == ".jpg" || ext == ".png" || ext == ".bmp" || ext == ".tga") {
                         Is_Ext_valid = true;
                     }
                 }
@@ -194,7 +213,7 @@ int main()
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    grayScale(image);  // calling grayScale function
+                    grayScale (image); 
                     cout << "GrayScale applied successfully!\n";
                 }
                 break;
@@ -202,7 +221,7 @@ int main()
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else{
-                    black_and_white(image);
+                    black_and_white (image);
                     cout << "Black and White applied successfully!\n";
                 }
                 break;
@@ -210,7 +229,7 @@ int main()
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    invertfilter(image);
+                    invert (image);
                     cout << "Image inverted successfully!\n";
                 }
                 break;
@@ -240,6 +259,9 @@ int main()
             case 9:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
+                } else {
+                    resize (image);
+                    cout << "Image resized successfully\n";
                 }
                 break;
             case 10:{
@@ -247,7 +269,7 @@ int main()
                     cout << "Please load an image at first!\n";
                 } else {
                     cout << "Please enter image name to store new image\n";
-                    cout << "and with one of the following extensions: .jpg, .bmp, .png, .jpeg\n";
+                    cout << "and with one of the following extensions: .jpg, .bmp, .png, .jpeg .tga\n";
 
                     cin >> filename;
                     image.saveImage(filename);
@@ -256,11 +278,11 @@ int main()
                 break;
             }
             case 11:
-                cout << "Exiting the program\n";
+                cout << "Exiting the program!\n";
                 running = false;
                 break;
             default:
-                cout << "ERROR in the inputs";
+                cout << "ERROR in the inputs!\n";
         }
     }
     
