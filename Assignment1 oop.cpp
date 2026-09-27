@@ -138,6 +138,64 @@ void Add_frame (Image& image)
     }
 }
 
+bool Rotate(Image& image){
+    int choice;
+    cout << "Enter the angle of rotation\n"; 
+    cout << "Choice 1: 90 Choice 2: 180 Choice 3: 270\n";
+    cin >> choice;
+    Image rotated_image;
+
+    if (choice == 1){
+        rotated_image = Image(image.height, image.width);
+
+        for(int i = 0; i < image.width; i++){
+            for(int j = 0; j < image.height; j++){
+                int i_new = image.height - 1 - j;
+                int j_new = i;
+
+                for(int k = 0; k < image.channels; k++){
+                    rotated_image(i_new, j_new, k) = image(i, j, k);
+                }
+            }
+        }
+        image = rotated_image;
+        return true;
+    }
+    else if(choice == 2){
+        rotated_image = Image(image.width, image.height);
+
+        for(int i = 0; i < image.width; i++){
+            for(int j = 0; j < image.height; j++){
+                int i_new = image.width - 1 - i;
+                int j_new = image.height - 1 - j;
+
+                for(int k = 0; k < image.channels; k++){
+                    rotated_image(i_new, j_new, k) = image(i, j, k);
+                }
+            }
+        }
+        image = rotated_image;
+        return true;
+    }
+    else if(choice == 3){
+        rotated_image = Image(image.height, image.width);
+
+        for(int i = 0; i < image.width; i++){
+            for(int j = 0; j < image.height; j++){
+                int i_new = j;
+                int j_new = image.height - 1 - i;
+
+                for(int k = 0; k < image.channels; k++){
+                    rotated_image(i_new, j_new, k) = image(i, j, k);
+                }
+            }
+        }
+        image = rotated_image;
+        return true;
+    }
+    return false;
+}
+
 int main()
 {
     cout << "Welcome To Baby Photoshop\n";
@@ -162,7 +220,7 @@ int main()
         switch (User_Choice) {
             case 1: {
                 cout << "Enter Image Filename: ";
-                cin >> filename;
+                getline(cin >> ws, filename);
 
                 ifstream file(filename);
                 if (!file.is_open()) {
@@ -230,6 +288,12 @@ int main()
             case 7:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
+                }
+                else if(Rotate(image)){
+                    cout << "Image is rotated successfully!\n";
+                }
+                else{
+                    cout << "Invalid choice,please try again!\n";
                 }
                 break;
             case 8:
