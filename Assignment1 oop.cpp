@@ -43,6 +43,7 @@ void grayScale (Image& image) {
             image.getPixel(i,j,2) = avg ;
         }
     }
+    cout << "GrayScale applied successfully!\n";
 }
 
 void black_and_white (Image& image) {
@@ -67,6 +68,7 @@ void black_and_white (Image& image) {
             }
         }
     }
+    cout << "Black and White applied successfully!\n";
 }
 
 void invert (Image& image) {
@@ -77,6 +79,7 @@ void invert (Image& image) {
             }
         }
     }
+    cout << "Image inverted successfully!\n";
 }
 
 void Add_frame (Image& image)
@@ -104,6 +107,7 @@ void Add_frame (Image& image)
                 }
             }
         }
+        cout << "Single frame added successfully!\n";
     } else if (frame_type == 2) {
         cout << "Enter the size of the outer frame then the size of the inner frame:\n";
         cin >> frame1Size >> frame2Size ;
@@ -131,6 +135,7 @@ void Add_frame (Image& image)
                 }
             }
         }
+        cout << "Double frame added successfully!\n";
     } else {
         cout << "Error in the inputs, please try again!\n";
     }
@@ -155,6 +160,7 @@ void resize (Image& image) {
         }
     }
     image = resized_image;
+    cout << "Image resized successfully!\n";
 }
 
 int main()
@@ -213,16 +219,14 @@ int main()
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    grayScale (image); 
-                    cout << "GrayScale applied successfully!\n";
+                    grayScale (image);
                 }
                 break;
             case 3:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
-                } else{
+                } else {
                     black_and_white (image);
-                    cout << "Black and White applied successfully!\n";
                 }
                 break;
             case 4:
@@ -230,7 +234,6 @@ int main()
                     cout << "Please load an image at first!\n";
                 } else {
                     invert (image);
-                    cout << "Image inverted successfully!\n";
                 }
                 break;
             case 5:
@@ -238,7 +241,6 @@ int main()
                     cout << "Please load an image at first!\n";
                 } else {
                     Add_frame (image);
-                    cout << "Frame added successfully!\n";
                 }
                 break;
             case 6:
@@ -261,7 +263,6 @@ int main()
                     cout << "Please load an image at first!\n";
                 } else {
                     resize (image);
-                    cout << "Image resized successfully!\n";
                 }
                 break;
             case 10:{
