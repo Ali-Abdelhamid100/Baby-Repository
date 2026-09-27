@@ -183,7 +183,7 @@ bool Rotate(Image& image){
         for(int i = 0; i < image.width; i++){
             for(int j = 0; j < image.height; j++){
                 int i_new = j;
-                int j_new = image.height - 1 - i;
+                int j_new = image.width - 1 - i;
 
                 for(int k = 0; k < image.channels; k++){
                     rotated_image(i_new, j_new, k) = image(i, j, k);
