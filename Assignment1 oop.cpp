@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <utility>
 #include "Image_Class.h"
 using namespace std;
 
@@ -137,6 +138,35 @@ void Add_frame (Image& image)
         cout << "Error in the inputs, please try again!\n";
     }
 }
+void flipImage(Image &image , int type){
+    if(type == 1)  // Horizontal flip
+    {
+      for(int i=0 ; i< image.width/2 ; i++)
+      {
+         for(int j=0 ; j < image.height ; j++)
+         {
+            for(int k=0 ; k<3 ; k++)
+            {
+               swap(image(i,j,k),image(image.width-1-i ,j,k)) ;
+            }
+         }
+      }
+    }
+    if( type == 2)  // Vertical flip
+    {
+        for(int i=0 ; i< image.width ; i++)
+        {
+          for(int j=0 ; j < image.height/2 ; j++)
+          {
+            for(int k=0 ; k < 3 ;k++)
+            {
+                swap(image(i,j,k) , image(i,image.height-1-j,k));
+            }
+          }
+        }
+        
+    }
+}
 
 int main()
 {
@@ -162,7 +192,7 @@ int main()
         switch (User_Choice) {
             case 1: {
                 cout << "Enter Image Filename: ";
-                cin >> filename;
+                getline( cin>> ws , filename)  ;
 
                 ifstream file(filename);
                 if (!file.is_open()) {
@@ -225,6 +255,13 @@ int main()
             case 6:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
+                }
+                else {
+                    int type ;
+                    cout << "Enter 1 for Horizontal flip or 2 for Vertical flip\n";
+                    cin >> type ;
+                    flipImage(image , type) ;
+
                 }
                 break;
             case 7:
