@@ -138,7 +138,11 @@ void Add_frame (Image& image)
         cout << "Error in the inputs, please try again!\n";
     }
 }
-void flipImage(Image &image , int type){
+void flipImage(Image &image){
+    int type ;
+    cout << "Enter 1 for Horizontal flip or 2 for Vertical flip: \n";
+    cin >> type ;
+
     if(type == 1)  // Horizontal flip
     {
       for(int i=0 ; i< image.width/2 ; i++)
@@ -151,10 +155,11 @@ void flipImage(Image &image , int type){
             }
          }
       }
+      cout << "Horizontal flip applied successfully! \n" ;
     }
-    if( type == 2)  // Vertical flip
-    {
-        for(int i=0 ; i< image.width ; i++)
+     else if (type == 2)  // vertical flip
+     {
+       for(int i=0 ; i< image.width ; i++)
         {
           for(int j=0 ; j < image.height/2 ; j++)
           {
@@ -164,9 +169,13 @@ void flipImage(Image &image , int type){
             }
           }
         }
-        
-    }
-}
+        cout << "Vertical flip applied successfully! \n" ;
+     }
+     else
+     {
+        cout <<"Error in inputs, please try again \n";
+     }
+ }
 
 int main()
 {
@@ -257,12 +266,9 @@ int main()
                     cout << "Please load an image at first!\n";
                 }
                 else {
-                    int type ;
-                    cout << "Enter 1 for Horizontal flip or 2 for Vertical flip\n";
-                    cin >> type ;
-                    flipImage(image , type) ;
-
-                }
+                    
+                    flipImage(image) ;
+               }
                 break;
             case 7:
                 if (!Is_Image_Loaded) {
