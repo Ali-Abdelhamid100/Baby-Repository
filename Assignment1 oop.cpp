@@ -24,13 +24,13 @@ void Starting_Menu ()
 }
 
 void grayScale(Image& image){
-
+    
        for(int i=0 ; i< image.width ; i++)   
     {
         for (int j=0 ; j < image.height ; j++)     
           {
             unsigned int avg = 0 ;
-
+           
             for(int k=0 ; k < 3 ;k++)
             {
                avg += image(i,j,k);
@@ -337,7 +337,6 @@ int main()
         switch (User_Choice) {
             case 1: {
                 cout << "Enter Image Filename: ";
-                getline( cin>> ws , filename)  ;
                 getline(cin >> ws, filename);
 
                 ifstream file(filename);
@@ -403,7 +402,7 @@ int main()
                     cout << "Please load an image at first!\n";
                 }
                 else {
-
+                    
                     flipImage(image) ;
                }
                 break;
