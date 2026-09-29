@@ -109,7 +109,7 @@ void Add_frame (Image& image)
         cin >> R1 >> G1 >> B1;
         cout << "Enter the values of R G B respectively of the inner frame:\n";
         cin >> R2 >> G2 >> B2;
-        
+
         for (int i = 0 ; i < image.width ; i++) {
             for (int j = 0 ; j < image.height ; j++) {
                 if (i < frame1Size || i >= image.width - frame1Size || j < frame1Size || j >= image.height - frame1Size) {
@@ -228,6 +228,90 @@ void Rotate(Image& image){
         cout << "Invalid choice, please try again!\n";
     }
 }
+void darken_lighten (Image& image) {
+    cout << "Enter 1 to Darken the image or 2 to lighten the image:\n";
+
+    int choice;
+    float darken_Percentage;
+    float lighten_Percentage;
+
+    if (!(cin >> choice)) {
+        cin.clear();
+        cin.ignore(1000,'\n');
+        cout << "invalid input, please enter a number!\n";
+        return;
+    }
+
+    if (choice == 1) {
+        cout << "Enter The Darkening Percentage You Want From 0 to 100:\n";
+
+        if (!(cin >> darken_Percentage)) {
+            cin.clear();
+            cin.ignore(1000,'\n');
+            cout << "invalid input, please enter a number!\n";
+            return;
+        }
+
+        if (0 <= darken_Percentage && darken_Percentage <= 100) {
+            for (int i = 0 ; i < image.width ; i++) {
+                for (int j = 0 ; j < image.height; j++) {
+                    for (int k = 0 ; k < image.channels ; k++) {
+                        image(i,j,k) =
+                            image(i,j,k) * (1 - (darken_Percentage / 100.0));
+
+                        if (image(i,j,k) > 255) {
+                            image(i,j,k) = 255;
+
+                        } else if (image(i,j,k) < 0) {
+                            image(i,j,k) = 0;
+                        }
+                    }
+                }
+            }
+            cout << "Darken filter is applied successfully!\n";
+        }
+        else
+        {
+            cout << "Error in the inputs, please try again!\n";
+        }
+    }
+    else if (choice == 2) {
+        cout << "Enter The lightening Percentage You Want From 0 to 100:\n";
+
+        if (!(cin >> lighten_Percentage)) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "invalid input, please enter a number!\n";
+            return;
+        }
+
+        if (0 <= lighten_Percentage && lighten_Percentage <= 100) {
+            for (int i = 0 ; i < image.width ; i++) {
+                for (int j = 0 ; j < image.height ; j++) {
+                    for (int k = 0 ; k < image.channels ; k++) {
+                        image(i,j,k) =
+                            image(i,j,k) +
+                            ((255 - image(i,j,k)) *
+                            (lighten_Percentage / 100.0));
+
+                        if (image(i,j,k) > 255) {
+                            image(i,j,k) = 255;
+
+                        } else if (image(i,j,k) < 0) {
+                            image(i,j,k) = 0;
+                        }
+                    }
+                }
+            }
+
+            cout << "Lighten filter is applied successfully!\n";
+        } else {
+            cout << "Error in the inputs, please try again!\n";
+        }
+    } else {
+        cout << "Error in the inputs, please try again!\n";
+    }
+}
 
 int main()
 {
@@ -334,6 +418,9 @@ int main()
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 }
+                else{
+                    darken_lighten(image);
+                }
                 break;
             case 9:
                 if (!Is_Image_Loaded) {
@@ -361,6 +448,6 @@ int main()
                 cout << "ERROR in the inputs";
         }
     }
-    
+
     return 0;
 }
