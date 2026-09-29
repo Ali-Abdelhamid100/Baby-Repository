@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <utility>
 #include "Image_Class.h"
 using namespace std;
 
@@ -23,23 +24,18 @@ void Starting_Menu ()
 }
 
 void grayScale(Image& image){
-    
-    // Loop through all pixels in image
 
-    for(int i=0 ; i< image.width ; i++)   
+       for(int i=0 ; i< image.width ; i++)   
     {
         for (int j=0 ; j < image.height ; j++)     
           {
             unsigned int avg = 0 ;
 
-           // Get RGB values
             for(int k=0 ; k < 3 ;k++)
             {
                avg += image(i,j,k);
             }
             avg /= 3;
-
-            // Set all RGB to average value
             image.getPixel(i,j,0)= avg ;
             image.getPixel(i,j,1)= avg ;
             image.getPixel(i,j,2) = avg ;
@@ -75,7 +71,7 @@ void invertfilter (Image& image) {
     for (int i = 0; i < image.width; ++i) {
         for (int j = 0; j < image.height; ++j) {
             for (int k = 0; k < 3; ++k) {
-                image(i, j, k) = 255 - image(i, j, k); // Invert pixel value
+                image(i, j, k) = 255 - image(i, j, k); 
             }
         }
     }
@@ -84,7 +80,7 @@ void invertfilter (Image& image) {
 void Add_frame (Image& image)
 {
     int frame_type;
-    cout << "Enter the Frame type : 1 for Single frame   2 for Double frame\n";
+    cout << "Enter the Frame type : 1 for Single frame or 2 for Double frame\n";
     cin >> frame_type;
     int R, G, B;
     int R1, G1, B1;
@@ -93,9 +89,9 @@ void Add_frame (Image& image)
     int frame1Size, frame2Size;
 
     if (frame_type == 1) {
-        cout << "Enter the size of the frame\n";
+        cout << "Enter the size of the frame:\n";
         cin >> frame_size;
-        cout << "Enter the values of R G B respectively :\n";
+        cout << "Enter the values of R G B respectively:\n";
         cin >> R >> G >> B;
         for (int i = 0 ; i < image.width ; i++) {
             for (int j = 0 ; j < image.height ; j++){
@@ -107,13 +103,13 @@ void Add_frame (Image& image)
             }
         }
     } else if (frame_type == 2) {
-        cout << "Enter the size of the outer frame then the size of the inner frame\n";
+        cout << "Enter the size of the outer frame then the size of the inner frame:\n";
         cin >> frame1Size >> frame2Size ;
         cout << "Enter the values of R G B respectively of the outer frame:\n";
         cin >> R1 >> G1 >> B1;
         cout << "Enter the values of R G B respectively of the inner frame:\n";
         cin >> R2 >> G2 >> B2;
-        
+
         for (int i = 0 ; i < image.width ; i++) {
             for (int j = 0 ; j < image.height ; j++) {
                 if (i < frame1Size || i >= image.width - frame1Size || j < frame1Size || j >= image.height - frame1Size) {
@@ -137,69 +133,183 @@ void Add_frame (Image& image)
         cout << "Error in the inputs, please try again!\n";
     }
 }
-void darken_lighten (Image& image){
-    cout << "Enter 1 To Darken The Image , Enter 2 To Lighten The Image\n" ;
+void flipImage(Image &image){
     int choice ;
-    float darken_Percentage ;
-    float lighten_Percentage ;
-    if (!(cin >> choice)){
-        cin.clear() ;
-        cin.ignore(1000, '\n') ;
-        cout << "invalid input , please enter a number \n" ;
-        return ;
+    cout << "Enter your choice: 1 for Horizontal flip or 2 for Vertical flip:\n";
+    cin >> choice ;
+
+    if(choice == 1)  
+    {
+      for(int i=0 ; i< image.width/2 ; i++)
+      {
+         for(int j=0 ; j < image.height ; j++)
+         {
+            for(int k=0 ; k<3 ; k++)
+            {
+               swap(image(i,j,k),image(image.width-1-i ,j,k)) ;
+            }
+         }
+      }
+      cout << "Horizontal flip applied successfully!\n" ;
     }
+     else if (choice == 2) 
+     {
+       for(int i=0 ; i< image.width ; i++)
+        {
+          for(int j=0 ; j < image.height/2 ; j++)
+          {
+            for(int k=0 ; k < 3 ;k++)
+            {
+                swap(image(i,j,k) , image(i,image.height-1-j,k));
+            }
+          }
+        }
+        cout << "Vertical flip applied successfully!\n" ;
+     }
+     else
+     {
+        cout << "Error in inputs, please try again!\n";
+     }
+ }
+
+void Rotate(Image& image){
+    int choice;
+    cout << "Enter the angle of rotation\n"; 
+    cout << "Choice 1: 90 Choice 2: 180 Choice 3: 270\n";
+    cin >> choice;
+    Image rotated_image;
+
     if (choice == 1){
-        cout << "Enter The Darkening Percentage You Want From 0 To 100\n";
-        if (!(cin >> darken_Percentage)){
-            cin.clear() ;
-            cin.ignore(1000, '\n') ;
-            cout << "invalid input , please enter a number \n" ;
-            return ;
+        rotated_image = Image(image.height, image.width);
+
+        for(int i = 0; i < image.width; i++){
+            for(int j = 0; j < image.height; j++){
+                int i_new = image.height - 1 - j;
+                int j_new = i;
+                for(int k = 0; k < image.channels; k++){
+                    rotated_image(i_new, j_new, k) = image(i, j, k);
+                }
+            }
         }
-        if (0 <= darken_Percentage && darken_Percentage <= 100){
-            for (int i = 0 ; i < image.width ; ++i){
-                for (int j = 0 ; j < image.height ; ++j){
-                    for (int k = 0 ; k < image.channels ; ++k){
-                        image(i,j,k) = image(i,j,k) * (1 - (darken_Percentage/100.0)) ;
-                        if (image(i,j,k) > 255){
-                            image(i,j,k) = 255 ;
-                        } else if (image(i,j,k) < 0){
-                            image(i,j,k) = 0 ;
+        image = rotated_image;
+        cout << "Image is rotated successfully by angle 90\n";
+    }
+    else if(choice == 2){
+        rotated_image = Image(image.width, image.height);
+
+        for(int i = 0; i < image.width; i++){
+            for(int j = 0; j < image.height; j++){
+                int i_new = image.width - 1 - i;
+                int j_new = image.height - 1 - j;
+                for(int k = 0; k < image.channels; k++){
+                    rotated_image(i_new, j_new, k) = image(i, j, k);
+                }
+            }
+        }
+        image = rotated_image;
+        cout << "Image is rotated successfully by angle 180\n";
+    }
+    else if(choice == 3){
+        rotated_image = Image(image.height, image.width);
+
+        for(int i = 0; i < image.width; i++){
+            for(int j = 0; j < image.height; j++){
+                int i_new = j;
+                int j_new = image.width - 1 - i;
+                for(int k = 0; k < image.channels; k++){
+                    rotated_image(i_new, j_new, k) = image(i, j, k);
+                }
+            }
+        }
+        image = rotated_image;
+        cout << "Image is rotated successfully by angle 270\n";
+    }
+    else{
+        cout << "Invalid choice, please try again!\n";
+    }
+}
+void darken_lighten (Image& image) {
+    cout << "Enter 1 to Darken the image or 2 to lighten the image:\n";
+
+    int choice;
+    float darken_Percentage;
+    float lighten_Percentage;
+
+    if (!(cin >> choice)) {
+        cin.clear();
+        cin.ignore(1000,'\n');
+        cout << "invalid input, please enter a number!\n";
+        return;
+    }
+
+    if (choice == 1) {
+        cout << "Enter The Darkening Percentage You Want From 0 to 100:\n";
+
+        if (!(cin >> darken_Percentage)) {
+            cin.clear();
+            cin.ignore(1000,'\n');
+            cout << "invalid input, please enter a number!\n";
+            return;
+        }
+
+        if (0 <= darken_Percentage && darken_Percentage <= 100) {
+            for (int i = 0 ; i < image.width ; i++) {
+                for (int j = 0 ; j < image.height; j++) {
+                    for (int k = 0 ; k < image.channels ; k++) {
+                        image(i,j,k) =
+                            image(i,j,k) * (1 - (darken_Percentage / 100.0));
+
+                        if (image(i,j,k) > 255) {
+                            image(i,j,k) = 255;
+
+                        } else if (image(i,j,k) < 0) {
+                            image(i,j,k) = 0;
                         }
                     }
                 }
             }
-        cout << "darken filter applied successfully\n" ;
-        } else {
-            cout << "Error in the input , please try again!\n" ;
+            cout << "Darken filter is applied successfully!\n";
         }
-    } else if (choice == 2){
-        cout << "Enter The lightening Percentage You Want From 0 To 100\n" ;
-        if (!(cin >> lighten_Percentage)){
-            cin.clear() ;
-            cin.ignore(1000, '\n') ;
-            cout << "invalid input , please enter a number \n" ;
-            return ;
+        else
+        {
+            cout << "Error in the inputs, please try again!\n";
         }
-        if (0 <= lighten_Percentage && lighten_Percentage <= 100){
-            for (int i = 0 ; i < image.width ; ++i){
-                for (int j = 0 ; j < image.height ; ++j){
-                    for (int k = 0 ; k < image.channels ; ++k){
-                        image(i,j,k) = image(i,j,k) + ((255 - image(i,j,k)) * (lighten_Percentage/100.0)) ;
-                        if (image(i,j,k) > 255){
-                            image(i,j,k) = 255 ;
-                        } else if (image(i,j,k) < 0){
-                            image(i,j,k) = 0 ;
+    }
+    else if (choice == 2) {
+        cout << "Enter The lightening Percentage You Want From 0 to 100:\n";
+
+        if (!(cin >> lighten_Percentage)) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "invalid input, please enter a number!\n";
+            return;
+        }
+
+        if (0 <= lighten_Percentage && lighten_Percentage <= 100) {
+            for (int i = 0 ; i < image.width ; i++) {
+                for (int j = 0 ; j < image.height ; j++) {
+                    for (int k = 0 ; k < image.channels ; k++) {
+                        image(i,j,k) =
+                            image(i,j,k) +
+                            ((255 - image(i,j,k)) *
+                            (lighten_Percentage / 100.0));
+
+                        if (image(i,j,k) > 255) {
+                            image(i,j,k) = 255;
+
+                        } else if (image(i,j,k) < 0) {
+                            image(i,j,k) = 0;
                         }
                     }
                 }
             }
-        cout << "lighten filter applied successfully\n" ;
+
+            cout << "Lighten filter is applied successfully!\n";
         } else {
-            cout << "Error in the input , please try again!\n" ;
+            cout << "Error in the inputs, please try again!\n";
         }
     } else {
-        cout << "Error in the input , please try again!\n" ;
+        cout << "Error in the inputs, please try again!\n";
     }
 }
 
@@ -227,6 +337,7 @@ int main()
         switch (User_Choice) {
             case 1: {
                 cout << "Enter Image Filename: ";
+                getline( cin>> ws , filename)  ;
                 getline(cin >> ws, filename);
 
                 ifstream file(filename);
@@ -259,7 +370,7 @@ int main()
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    grayScale(image);  // calling grayScale function
+                    grayScale(image);  
                     cout << "GrayScale applied successfully!\n";
                 }
                 break;
@@ -291,17 +402,25 @@ int main()
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 }
+                else {
+
+                    flipImage(image) ;
+               }
                 break;
             case 7:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 }
+                else{
+                    Rotate(image);
+                }
                 break;
             case 8:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
-                } else {
-                   darken_lighten (image) ; 
+                }
+                else{
+                    darken_lighten(image);
                 }
                 break;
             case 9:
@@ -316,7 +435,7 @@ int main()
                     cout << "Please enter image name to store new image\n";
                     cout << "and with one of the following extensions: .jpg, .bmp, .png, .jpeg\n";
 
-                    cin >> filename ;
+                    cin >> filename;
                     image.saveImage(filename);
                     cout << "Your new image saved successfully\n";
                 }
@@ -330,6 +449,6 @@ int main()
                 cout << "ERROR in the inputs";
         }
     }
-    
+
     return 0;
 }
