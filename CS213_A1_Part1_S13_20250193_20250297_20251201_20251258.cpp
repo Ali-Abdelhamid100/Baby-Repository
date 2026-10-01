@@ -1,23 +1,46 @@
-// This cpp File includes: The 8 required Filters for the first submission of Assignment 1
-// ,and Main Menu that includes the following choices:
-// load, save images, and Exiting the program.
-
-// Students informations:
-// 1. Habiba Nader Hussein Ali          20250193 
-// 2. Sama Mounir Mohamed Mohamed       20250297
-// 3. Seif El-Deen Ismail Mostafa       20251201
-// 4. Ali Abdelhamid Ali Abdelhamid     20251258
-
-// Filters Distribution:
-// 1,5 --> Habiba Nader Hussein Ali
-// 2,6 --> Sama Mounir Mohamed Mohamed
-// 3,7 --> Seif El-Deen Ismail Mostafa
-// 4,8 --> Ali Abdelhamid Ali Abdelhamid
-
-// Addtional Tasks:
-// Main Menu --> All the members.
-// GitHub Repository Commits --> All the members.
-
+/*
+====================================================================================================
+* Course Code: CS213 - Object-Oriented Programming
+* Assignment: Assignment 1 (First Submission)
+* Submission Date: 1 October 2026
+* Submitted To: Dr Mohammad El-Ramly
+* Section: S13, S14
+* TA: Mennat Allah Mamdouh
+* Institution: Faculty of Computing and Artificial Intelligence, Cairo University
+-------------------------------------------------
+# Students informations:
+ 1. Habiba Nader Hussein Ali          20250193 
+ 2. Sama Mounir Mohamed Mohamed       20250297
+ 3. Seif El-Deen Ismail Mostafa       20251201
+ 4. Ali Abdelhamid Ali Abdelhamid     20251258
+-------------------------------------------------
+# File Desciption:
+ This cpp File includes: The 8 required core Filters for the first submission of Assignment 1
+ ,and Main Menu that supports image loading, Processing, and Exiting the program.
+ * Menu Options & Filters:
+ 1. Load New Image
+ 2. Grayscale
+ 3. Black & White
+ 4. Invert Colors
+ 5. Add Frame
+ 6. Flip Image
+ 7. Rotate Image
+ 8. Darken / Light
+ 9. Resize Image
+ 10. Save Image
+ 11. Exit
+-------------------------------------------------
+# Filters Distribution:
+ 1,5 --> Habiba Nader Hussein Ali
+ 2,6 --> Sama Mounir Mohamed Mohamed
+ 3,7 --> Seif El-Deen Ismail Mostafa
+ 4,8 --> Ali Abdelhamid Ali Abdelhamid
+-------------------------------------------------
+# Addtional Tasks:
+ Main Menu --> All the members
+ GitHub Repository Commits --> All the members
+====================================================================================================
+*/
 
 #include <iostream>
 #include <fstream>
@@ -26,9 +49,9 @@
 using namespace std;
 
 void Starting_Menu () {
-    cout << "==================================\n";
-    cout << "=============  Menu  =============\n";
-    cout << "==================================\n";
+    cout << "==========================================\n";
+    cout << "=================  Menu  =================\n";
+    cout << "==========================================\n";
     cout << "1. Load new image\n";
     cout << "2. Grayscale\n";
     cout << "3. Black and White\n";
@@ -53,9 +76,9 @@ void grayScale (Image& image) {
             }
             avg /= 3;
 
-            image.getPixel(i,j,0)= avg ;
-            image.getPixel(i,j,1)= avg ;
-            image.getPixel(i,j,2) = avg ;
+            image.getPixel(i,j,0)= avg;
+            image.getPixel(i,j,1)= avg;
+            image.getPixel(i,j,2) = avg;
         }
     }
     cout << "GrayScale is applied successfully!\n";
@@ -109,8 +132,13 @@ void Add_frame (Image& image) {
     if (frame_type == 1) {
         cout << "Enter the size of the frame:\n";
         cin >> frame_size;
-        cout << "Enter the values of R G B respectively:\n";
+        cout << "Enter the values of R G B respectively from 0 to 255:\n";
         cin >> R >> G >> B;
+        if ((R < 0 || R > 255) || (B < 0 || B > 255) || (G < 0 || G > 255))
+        {
+            cout << "Error in the inputs, please try again!\n";
+            return;
+        }
         for (int i = 0 ; i < image.width ; i++) {
             for (int j = 0 ; j < image.height ; j++) {
                 if (i < frame_size || i >= image.width - frame_size || j < frame_size || j >= image.height - frame_size) {
@@ -126,10 +154,20 @@ void Add_frame (Image& image) {
         cin >> frame1Size >> frame2Size ;
         cout << "Enter the gap between the two frames:\n";
         cin >> gap;
-        cout << "Enter the values of R G B respectively of the outer frame:\n";
+        cout << "Enter the values of R G B respectively of the outer frame from 0 to 255:\n";
         cin >> R1 >> G1 >> B1;
-        cout << "Enter the values of R G B respectively of the inner frame:\n";
+        if ((R1 < 0 || R1 > 255) || (B1 < 0 || B1 > 255) || (G1 < 0 || G1 > 255))
+        {
+            cout << "Error in the inputs, please try again!\n";
+            return;
+        }
+        cout << "Enter the values of R G B respectively of the inner frame from 0 to 255:\n";
         cin >> R2 >> G2 >> B2;
+        if ((R2 < 0 || R2 > 255) || (B2 < 0 || B2 > 255) || (G2 < 0 || G2 > 255))
+        {
+            cout << "Error in the inputs, please try again!\n";
+            return;
+        }
         
         for (int i = 0 ; i < image.width ; i++) {
             for (int j = 0 ; j < image.height ; j++) {
@@ -153,13 +191,29 @@ void Add_frame (Image& image) {
         for (int i = 0 ; i < image.width ; i++) {
             for (int j = 0 ; j < image.height ; j++) {
                 if (((i == frame1Size + 1) || (i == frame1Size) || (i == frame1Size - 1)) && (j < frame1Size + 1)
-                ||  ((i == frame1Size + 1) || (i == frame1Size) || (i == frame1Size - 1)) && (j >= image.height - (frame1Size + 1))
+                ||  ((i == frame1Size + 1) || (i == frame1Size) || (i == frame1Size - 1)) && (j > image.height - (frame1Size + 1))
                 ||  ((i == image.width - (frame1Size + 1)) || (i == image.width - frame1Size) || (i == image.width - (frame1Size - 1))) && (j < frame1Size + 1)
-                ||  ((i == image.width - (frame1Size + 1)) || (i == image.width - frame1Size) || (i == image.width - (frame1Size - 1))) && (j >= image.height - (frame1Size + 1))
+                ||  ((i == image.width - (frame1Size + 1)) || (i == image.width - frame1Size) || (i == image.width - (frame1Size - 1))) && (j > image.height - (frame1Size + 1))
                 ||  ((j == frame1Size + 1) || (j == frame1Size) || (j == frame1Size - 1)) && (i < frame1Size + 1)
-                ||  ((j == frame1Size + 1) || (j == frame1Size) || (j == frame1Size - 1)) && (i >= image.width - (frame1Size + 1))
+                ||  ((j == frame1Size + 1) || (j == frame1Size) || (j == frame1Size - 1)) && (i > image.width - (frame1Size + 1))
                 ||  ((j == image.height - (frame1Size + 1)) || (j == image.height - frame1Size) || (j == image.height - (frame1Size - 1))) && (i < frame1Size + 1)
-                ||  ((j == image.height - (frame1Size + 1)) || (j == image.height - frame1Size) || (j == image.height - (frame1Size - 1))) && (i >= image.width - (frame1Size + 1))) {
+                ||  ((j == image.height - (frame1Size + 1)) || (j == image.height - frame1Size) || (j == image.height - (frame1Size - 1))) && (i > image.width - (frame1Size + 1))) {
+                    image.getPixel(i,j,0) = 255;
+                    image.getPixel(i,j,1) = 255;
+                    image.getPixel(i,j,2) = 255;
+                }
+            }
+        }
+        for (int i = 0 ; i < image.width ; i++) {
+            for (int j = 0 ; j < image.height ; j++) {
+                if (((i == frame1Size*4 + 1) || (i == frame1Size*4) || (i == frame1Size*4 - 1)) && (j < frame1Size + 1)
+                ||  ((i == frame1Size*4 + 1) || (i == frame1Size*4) || (i == frame1Size*4 - 1)) && (j > image.height - (frame1Size + 1))
+                ||  ((i == image.width - (frame1Size*4 + 1)) || (i == image.width - frame1Size*4) || (i == image.width - (frame1Size*4 - 1))) && (j < frame1Size + 1)
+                ||  ((i == image.width - (frame1Size*4 + 1)) || (i == image.width - frame1Size*4) || (i == image.width - (frame1Size*4 - 1))) && (j > image.height - (frame1Size + 1))
+                ||  ((j == frame1Size*4 + 1) || (j == frame1Size*4) || (j == frame1Size*4 - 1)) && (i < frame1Size + 1)
+                ||  ((j == frame1Size*4 + 1) || (j == frame1Size*4) || (j == frame1Size*4 - 1)) && (i > image.width - (frame1Size + 1))
+                ||  ((j == image.height - (frame1Size*4 + 1)) || (j == image.height - frame1Size*4) || (j == image.height - (frame1Size*4 - 1))) && (i < frame1Size + 1)
+                ||  ((j == image.height - (frame1Size*4 + 1)) || (j == image.height - frame1Size*4) || (j == image.height - (frame1Size*4 - 1))) && (i > image.width - (frame1Size + 1))) {
                     image.getPixel(i,j,0) = 255;
                     image.getPixel(i,j,1) = 255;
                     image.getPixel(i,j,2) = 255;
@@ -170,13 +224,30 @@ void Add_frame (Image& image) {
         for (int i = 0 ; i < image.width ; i++) {
             for (int j = 0 ; j < image.height ; j++) {
                 if (((i == frame1Size + 1) || (i == frame1Size) || (i == frame1Size - 1)) && (j < frame1Size + 1)
-                ||  ((i == frame1Size + 1) || (i == frame1Size) || (i == frame1Size - 1)) && (j >= image.height - (frame1Size + 1))
+                ||  ((i == frame1Size + 1) || (i == frame1Size) || (i == frame1Size - 1)) && (j > image.height - (frame1Size + 1))
                 ||  ((i == image.width - (frame1Size + 1)) || (i == image.width - frame1Size) || (i == image.width - (frame1Size - 1))) && (j < frame1Size + 1)
-                ||  ((i == image.width - (frame1Size + 1)) || (i == image.width - frame1Size) || (i == image.width - (frame1Size - 1))) && (j >= image.height - (frame1Size + 1))
+                ||  ((i == image.width - (frame1Size + 1)) || (i == image.width - frame1Size) || (i == image.width - (frame1Size - 1))) && (j > image.height - (frame1Size + 1))
                 ||  ((j == frame1Size + 1) || (j == frame1Size) || (j == frame1Size - 1)) && (i < frame1Size + 1)
-                ||  ((j == frame1Size + 1) || (j == frame1Size) || (j == frame1Size - 1)) && (i >= image.width - (frame1Size + 1))
+                ||  ((j == frame1Size + 1) || (j == frame1Size) || (j == frame1Size - 1)) && (i > image.width - (frame1Size + 1))
                 ||  ((j == image.height - (frame1Size + 1)) || (j == image.height - frame1Size) || (j == image.height - (frame1Size - 1))) && (i < frame1Size + 1)
-                ||  ((j == image.height - (frame1Size + 1)) || (j == image.height - frame1Size) || (j == image.height - (frame1Size - 1))) && (i >= image.width - (frame1Size + 1))) {
+                ||  ((j == image.height - (frame1Size + 1)) || (j == image.height - frame1Size) || (j == image.height - (frame1Size - 1))) && (i > image.width - (frame1Size + 1))) {
+                    image.getPixel(i,j,0) = 255;
+                    image.getPixel(i,j,1) = 255;
+                    image.getPixel(i,j,2) = 255;
+                }
+            }
+        }
+        frame1Size /= 6;
+        for (int i = 0 ; i < image.width ; i++) {
+            for (int j = 0 ; j < image.height ; j++) {
+                if ((i <= frame1Size + 1) && (j < frame1Size + 1)
+                ||  (i <= frame1Size + 1) && (j > image.height - (frame1Size + 1))
+                ||  (i >= image.width - (frame1Size + 1)) && (j < frame1Size + 1)
+                ||  (i >= image.width - (frame1Size + 1)) && (j > image.height - (frame1Size + 1))
+                ||  (j <= frame1Size + 1) && (i < frame1Size + 1)
+                ||  (j <= frame1Size + 1) && (i > image.width - (frame1Size + 1))
+                ||  (j >= image.height - (frame1Size + 1)) && (i < frame1Size + 1)
+                ||  (j >= image.height - (frame1Size + 1)) && (i > image.width - (frame1Size + 1))) {
                     image.getPixel(i,j,0) = 255;
                     image.getPixel(i,j,1) = 255;
                     image.getPixel(i,j,2) = 255;
