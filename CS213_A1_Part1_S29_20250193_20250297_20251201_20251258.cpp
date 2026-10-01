@@ -4,7 +4,7 @@
 * Assignment: Assignment 1 (First Submission)
 * Submission Date: 1 October 2026
 * Submitted To: Dr Mohammad El-Ramly
-* Section: S13, S14
+* Section: S29, S30
 * TA: Mennat Allah Mamdouh
 * Institution: Faculty of Computing and Artificial Intelligence, Cairo University
 -------------------------------------------------
