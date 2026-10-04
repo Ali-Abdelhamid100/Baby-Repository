@@ -62,6 +62,15 @@ void Starting_Menu () {
     cout << "8. Darken / Lighten\n";
     cout << "9. Resize\n";
     cout << "10. Merge\n";
+    cout << "11. Edge Detection\n";
+    cout << "12. Crop\n";
+    cout << "13. Blur\n";
+    cout << "14. Sunlight\n";
+    cout << "15. Tv Images\n";
+    cout << "16. Purple\n";
+    cout << "17. Inferared\n";
+    cout << "18. Skewing\n";
+    cout << "19. Oil Painting\n";
     cout << "20. Save\n";
     cout << "21. Exit\n";
 }
@@ -541,6 +550,19 @@ void Merge(Image &image1 , Image &image2){
         
     }
 }
+void Sunlight(Image &image){
+    for(int i=0 ; i < image.width ; i++)
+    {
+        for(int j=0 ; j < image.height ; j++)
+        {
+          image.getPixel(i,j,0) = min(255,image.getPixel(i,j,0) + 50);
+          image.getPixel(i,j,1) = min(255,image.getPixel(i,j,1) + 50);
+          image.getPixel(i,j,2) = max(0,image.getPixel(i,j,2) - 20); 
+        }
+    }
+    cout <<"Sunlight effect applied successfully!\n";
+}
+
 int main()
 {
     cout << "Welcome To Baby Photoshop!\n";
@@ -652,7 +674,7 @@ int main()
             case 10:
                 if(!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
-                }  else{
+                }  else {
                     string filename2 ;
                     cout << "Enter second image filename:\n";
                     getline(cin >> ws,filename2);
@@ -660,6 +682,12 @@ int main()
                     Merge(image,image2);
                 }  
                 break;
+            case 14:
+               if (!Is_Image_Loaded) {
+                   cout << "Please load an imaage at first!\n";
+               } else {
+                   Sunlight(image);
+               }     
             case 20:{
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
