@@ -46,6 +46,9 @@
 #include <fstream>
 #include <string>
 #include "Image_Class.h"
+#include <sstream>
+#include <stdlib.h>
+#include <cmath>
 using namespace std;
 
 void Starting_Menu () {
@@ -61,8 +64,18 @@ void Starting_Menu () {
     cout << "7. Rotate\n";
     cout << "8. Darken / Lighten\n";
     cout << "9. Resize\n";
-    cout << "10. Save\n";
-    cout << "11. Exit\n";
+    cout << "10. Merge\n";
+    cout << "11. Edge Detection\n";
+    cout << "12. Crop\n";
+    cout << "13. Blur\n";
+    cout << "14. Sunlight\n";
+    cout << "15. Tv Images\n";
+    cout << "16. Purple\n";
+    cout << "17. Infrared\n";
+    cout << "18. Skewing\n";
+    cout << "19. Oil Painting\n";
+    cout << "20. Save\n";
+    cout << "21. Exit\n";
 }
 
 void grayScale (Image& image) {
@@ -446,6 +459,48 @@ void resize (Image& image) {
     cout << "Image is resized successfully!\n";
 }
 
+void detect_edges(Image& image){
+    Image gray = image;
+
+    std::streambuf* original = cout.rdbuf();
+    std::ostringstream temp;
+    cout.rdbuf(temp.rdbuf());
+
+    grayScale(gray);
+
+    cout.rdbuf(original);
+
+    // 100 is a good starting value for unnormalized gradient magnitude.
+    const int EDGE_THRESHOLD = 100;
+    Image result = gray;
+    int Gx[3][3] = {{-1, 0 ,1},{-2, 0, 2},{-1, 0, 1}};
+    int Gy[3][3] = {{-1, -2, -1},{0, 0, 0},{1, 2,  1}};
+    for(int i = 1 ; i < gray.width - 1; i++){
+        for(int j = 1; j < gray.height - 1; j++){
+            int gx = 0;
+            int gy = 0;
+            for(int row = -1; row <= 1; row++){
+                for(int column = -1; column <= 1; column++){
+                    gx += gray(i + column, j + row, 0) * Gx[row + 1][column + 1];
+                    gy += gray(i + column, j + row, 0) * Gy[row + 1][column + 1];
+                }
+            }
+            int magnitude = sqrt(gx * gx + gy * gy);
+
+            if (magnitude > EDGE_THRESHOLD){
+                result(i, j, 0) = 0;
+                result(i, j, 1) = 0;
+                result(i, j, 2) = 0;}
+            else{
+                result(i, j, 0) = 255;
+                result(i, j, 1) = 255;
+                result(i, j, 2) = 255;}
+        }
+    }
+    image = result;
+    cout << "Image edges are detected successfully!\n";
+} 
+
 int main()
 {
     cout << "Welcome To Baby Photoshop!\n";
@@ -554,7 +609,59 @@ int main()
                     resize (image);
                 }
                 break;
-            case 10:{
+            case 10:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 11:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    detect_edges(image);
+                }
+                break;
+            case 12:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 13:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 14:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 15:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 16:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 17:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 18:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 19:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 20:{
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
@@ -567,7 +674,7 @@ int main()
                 }
                 break;
             }
-            case 11:
+            case 21:
                 cout << "Exiting the program!\n";
                 running = false;
                 break;
