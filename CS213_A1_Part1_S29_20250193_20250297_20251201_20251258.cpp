@@ -61,8 +61,18 @@ void Starting_Menu () {
     cout << "7. Rotate\n";
     cout << "8. Darken / Lighten\n";
     cout << "9. Resize\n";
-    cout << "10. Save\n";
-    cout << "11. Exit\n";
+    cout << "10. Merge\n";
+    cout << "11. Edge Detection\n";
+    cout << "12. Crop\n";
+    cout << "13. Blur\n";
+    cout << "14. Sunlight\n";
+    cout << "15. Tv Images\n";
+    cout << "16. Purple\n";
+    cout << "17. Infrared\n";
+    cout << "18. Skewing\n";
+    cout << "19. Oil Painting\n";
+    cout << "20. Save\n";
+    cout << "21. Exit\n";
 }
 
 void grayScale (Image& image) {
@@ -445,6 +455,49 @@ void resize (Image& image) {
     image = resized_image;
     cout << "Image is resized successfully!\n";
 }
+void crop (Image& image) {
+    int new_width, new_height, x, y;
+    cout << "Enter the x and y coordinates of the top-left corner:\n";
+    cin >> x >> y;
+    cout << "Enter the new width and height respectively:\n";
+    cin >> new_width >> new_height;
+    Image cropped_image(new_width, new_height);
+    if (x >= 0 && y >= 0 && x + new_width <= image.width && y + new_height <= image.height) {
+        for (int i = 0; i < new_width; i++) {
+            for (int j = 0; j < new_height; j++) {
+                for (int k = 0; k < image.channels; k++) {
+                    cropped_image(i, j, k) = image(x + i, y + j, k);
+                }
+            }
+        }
+        image = cropped_image;
+        cout << "Image is cropped successfully!\n";
+    } else {
+        cout << "Error in the inputs, please try again!\n";
+    }
+}
+void purple (Image& image) {
+    float red_factor = 0.08;
+    float green_factor = 0.15;
+    float blue_factor = 0.18;
+    for (int i = 0; i < image.width; i++) {
+        for (int j = 0; j < image.height; j++) {
+            float red = image(i, j, 0) + ((255-image(i, j, 0)) * red_factor);
+            float green = image(i, j, 1) * (1 - green_factor);
+            float blue = image(i, j, 2) + ((255-image(i, j, 2)) * blue_factor);
+            if (red > 255) red = 255;
+            if (red < 0) red = 0;
+            if (green > 255) green = 255;
+            if (green < 0) green = 0;
+            if (blue > 255) blue = 255;
+            if (blue < 0) blue = 0;
+            image(i, j, 0) = static_cast<unsigned char> (red);
+            image(i, j, 1) = static_cast<unsigned char> (green);
+            image(i, j, 2) = static_cast<unsigned char> (blue);
+        }
+    }
+    cout << "Purple filter is applied successfully!\n";
+}
 
 int main()
 {
@@ -554,7 +607,61 @@ int main()
                     resize (image);
                 }
                 break;
-            case 10:{
+            case 10:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 11:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 12:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    crop (image);
+                }
+                break;
+            case 13:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 14:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 15:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 16:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    purple (image);
+                }
+                break;
+            case 17:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 18:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 19:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;    
+            case 20:{
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
@@ -567,7 +674,7 @@ int main()
                 }
                 break;
             }
-            case 11:
+            case 21:
                 cout << "Exiting the program!\n";
                 running = false;
                 break;
