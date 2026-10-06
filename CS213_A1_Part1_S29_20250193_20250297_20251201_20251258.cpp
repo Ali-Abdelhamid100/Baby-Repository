@@ -475,6 +475,7 @@ void Merge(Image &image1 , Image &image2){
         image1 = res;
         cout<< "Two images have same sizes\n";
         cout<< "Image merged successfully!\n" ;
+
     }
     else{
         int choice ;
@@ -755,12 +756,14 @@ int main()
                } else {
                    Sunlight(image);
                } 
+               break;
             case 18:
                if(!Is_Image_Loaded) {
                   cout << "please laoad an image at first!\n";
                } else {
-                Skew(image);
-               }      
+                  Skew(image);
+               } 
+                break;     
             case 20:{
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
