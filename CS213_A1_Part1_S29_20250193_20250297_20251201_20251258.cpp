@@ -48,6 +48,9 @@
 #include <cmath>
 #include <algorithm>
 #include "Image_Class.h"
+#include <sstream>
+#include <stdlib.h>
+#include <cmath>
 using namespace std;
 
 void Starting_Menu () {
@@ -70,7 +73,7 @@ void Starting_Menu () {
     cout << "14. Sunlight\n";
     cout << "15. Tv Images\n";
     cout << "16. Purple\n";
-    cout << "17. Inferared\n";
+    cout << "17. Infrared\n";
     cout << "18. Skewing\n";
     cout << "19. Oil Painting\n";
     cout << "20. Save\n";
@@ -456,8 +459,8 @@ void resize (Image& image) {
     }
     image = resized_image;
     cout << "Image is resized successfully!\n";
-
 }
+
 void Merge(Image &image1 , Image &image2){
     if(image1.width == image2.width && image1.height == image2.height){
         Image res(image1.width,image1.height);
@@ -565,6 +568,152 @@ void Sunlight(Image &image){
     }
     cout <<"Sunlight effect applied successfully!\n";
 }
+
+void detect_edges(Image& image){
+    Image gray = image;
+
+    std::streambuf* original = cout.rdbuf();
+    std::ostringstream temp;
+    cout.rdbuf(temp.rdbuf());
+
+    grayScale(gray);
+
+    cout.rdbuf(original);
+
+    // 100 is a good starting value for unnormalized gradient magnitude.
+    const int EDGE_THRESHOLD = 100;
+    Image result = gray;
+    int Gx[3][3] = {{-1, 0 ,1},{-2, 0, 2},{-1, 0, 1}};
+    int Gy[3][3] = {{-1, -2, -1},{0, 0, 0},{1, 2,  1}};
+    for(int i = 1 ; i < gray.width - 1; i++){
+        for(int j = 1; j < gray.height - 1; j++){
+            int gx = 0;
+            int gy = 0;
+            for(int row = -1; row <= 1; row++){
+                for(int column = -1; column <= 1; column++){
+                    gx += gray(i + column, j + row, 0) * Gx[row + 1][column + 1];
+                    gy += gray(i + column, j + row, 0) * Gy[row + 1][column + 1];
+                }
+            }
+            int magnitude = sqrt(gx * gx + gy * gy);
+
+            if (magnitude > EDGE_THRESHOLD){
+                result(i, j, 0) = 0;
+                result(i, j, 1) = 0;
+                result(i, j, 2) = 0;}
+            else{
+                result(i, j, 0) = 255;
+                result(i, j, 1) = 255;
+                result(i, j, 2) = 255;}
+        }
+    }
+    image = result;
+    cout << "Image edges are detected successfully!\n";
+} 
+
+void  addNoise(Image& image, int noiseLevel){
+    for(int i = 0; i < image.width; i++){
+        for(int j = 0; j < image.height; j++){
+            for(int k = 0; k < image.channels; k++){
+
+                int noise = (rand() % (2 * noiseLevel + 1)) - noiseLevel;
+                int new_value = image(i, j, k) + noise;
+                
+                if(new_value < 0){
+                    image.setPixel(i, j , k, 0);
+                }
+                else if(new_value > 255)
+                    image.setPixel(i, j, k, 255);
+                else{
+                    image.setPixel(i, j, k, new_value);
+                    
+                    }
+            }
+        }
+    }
+}
+
+void addScanlines(Image& image, int scanlineIntensity){
+    for(int j = 0;j < image.height; j++){
+        if(j % 2 == 0){
+            for(int i = 0;i < image.width; i++){
+                for(int k = 0;k < image.channels; k++){
+                    if(image(i, j, k) > scanlineIntensity){
+                        image.setPixel(i, j, k, image(i, j, k) - scanlineIntensity);
+                    }
+                    else{
+                        image.setPixel(i, j, k, 0);
+                    }
+                }
+
+            }
+        }
+    }
+
+}
+
+void applyColorDistortion(Image& image)
+{
+    int redshift = 30;
+    int greenshift = 0;
+    int blueshift = -20;
+
+    for (int i = 0; i < image.width; i++)
+    {
+        for (int j = 0; j < image.height; j++)
+        {
+            int red = image(i, j, 0) + redshift;
+            int green = image(i, j, 1) + greenshift;
+            int blue = image(i, j, 2) + blueshift;
+
+            if (red > 255)
+                red = 255;
+            if (red < 0)
+                red = 0;
+
+            if (green > 255)
+                green = 255;
+            if (green < 0)
+                green = 0;
+
+            if (blue > 255)
+                blue = 255;
+            if (blue < 0)
+                blue = 0;
+
+            image.setPixel(i, j, 0, red);
+            image.setPixel(i, j, 1, green);
+            image.setPixel(i, j, 2, blue);
+        }
+    }
+}
+
+void old_tv_image(Image& image){
+    int noiseLevel;
+    int scanlineIntensity;
+
+    cout << "Enter noise level: \n";
+    cin >> noiseLevel;
+
+    if(noiseLevel < 0){
+        cout << "Invalid input, please try again!\n";
+        return;
+    }
+
+    cout << "Enter scanline intensity: \n";
+    cin >> scanlineIntensity;
+
+    if(scanlineIntensity < 0){
+        cout << "Invalid input, please try again!\n";
+        return;
+    }
+
+    addNoise(image, noiseLevel);
+    addScanlines(image, scanlineIntensity);
+    applyColorDistortion(image);
+    cout << "Image is converted to old tv image successfully!\n";
+}
+
 void Skew(Image& image)
 {
     double angle;
@@ -631,6 +780,7 @@ void Skew(Image& image)
 
     cout << "Image skewed successfully!\n";
 }
+
 int main()
 {
     cout << "Welcome To Baby Photoshop!\n";
@@ -740,30 +890,75 @@ int main()
                 }
                 break;
             case 10:
-                if(!Is_Image_Loaded) {
+                if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
-                }  else {
+                }
+                else {
                     string filename2 ;
                     cout << "Enter second image filename:\n";
                     getline(cin >> ws,filename2);
                     Image image2(filename2);
                     Merge(image,image2);
-                }  
+                }
+                break;
+            case 11:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    detect_edges(image);
+                }
+                break;
+            case 12:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 13:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
                 break;
             case 14:
-               if (!Is_Image_Loaded) {
-                   cout << "Please load an imaage at first!\n";
-               } else {
-                   Sunlight(image);
-               } 
-               break;
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else{
+                    Sunlight(image);
+                }
+                break;
+            case 15:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                else{
+                    old_tv_image(image);
+                }
+                break;
+            case 16:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+            case 17:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
             case 18:
-               if(!Is_Image_Loaded) {
-                  cout << "please laoad an image at first!\n";
-               } else {
-                  Skew(image);
-               } 
-                break;     
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else{
+                    Skew(image);
+                }
+                break;
+            case 19:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }
+                break;
+                if(!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } 
+                break; 
             case 20:{
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
