@@ -45,6 +45,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cmath>
+#include <algorithm>
 #include "Image_Class.h"
 using namespace std;
 
@@ -61,8 +63,18 @@ void Starting_Menu () {
     cout << "7. Rotate\n";
     cout << "8. Darken / Lighten\n";
     cout << "9. Resize\n";
-    cout << "10. Save\n";
-    cout << "11. Exit\n";
+    cout << "10. Merge\n";
+    cout << "11. Edge Detection\n";
+    cout << "12. Crop\n";
+    cout << "13. Blur\n";
+    cout << "14. Sunlight\n";
+    cout << "15. Tv Images\n";
+    cout << "16. Purple\n";
+    cout << "17. Inferared\n";
+    cout << "18. Skewing\n";
+    cout << "19. Oil Painting\n";
+    cout << "20. Save\n";
+    cout << "21. Exit\n";
 }
 
 void grayScale (Image& image) {
@@ -444,8 +456,181 @@ void resize (Image& image) {
     }
     image = resized_image;
     cout << "Image is resized successfully!\n";
-}
 
+}
+void Merge(Image &image1 , Image &image2){
+    if(image1.width == image2.width && image1.height == image2.height){
+        Image res(image1.width,image1.height);
+        for(int i=0 ; i< image1.width ; i++){
+            for (int j = 0; j < image1.height; j++)
+            {
+              for (int k =0 ; k<3 ; k++)
+              {
+                   res.getPixel(i,j,k) = (image1(i,j,k) + image2(i,j,k)) / 2 ;
+              }
+               
+            }
+            
+        } 
+        image1 = res;
+        cout<< "Two images have same sizes\n";
+        cout<< "Image merged successfully!\n" ;
+
+    }
+    else{
+        int choice ;
+        cout<< "Two images have different sizes\n";
+        cout<< "Enter 1 for resize both to biggest dimensions or 2 for common area:\n";
+        cin>> choice ;
+        if (choice == 1)
+        {
+            
+            int new_width = max(image1.width , image2.width);
+            int new_height = max(image1.height , image2.height);
+            Image resized1(new_width , new_height);
+            Image resized2(new_width , new_height);
+            for(int i=0 ; i < new_width ; i++)
+            {
+                for(int j=0 ; j < new_height ; j++)
+                {
+                    int old_w = (i * image1.width) / new_width ;
+                    int old_h = (j * image1.height) / new_height ;
+                    for(int k=0 ; k < image1.channels ; k++ )
+                    {
+                        resized1.getPixel(i,j,k) = image1(old_w,old_h,k);
+                    }
+                }
+            }
+            for(int i=0 ; i < new_width ;i++)
+            {
+                for(int j=0 ; j < new_height ; j++ )
+                {
+                    int old_w = (i * image2.width) / new_width ;
+                    int old_h = (j * image2.height) / new_height ;
+                    for (int k = 0; k < image2.channels; k++)
+                    {
+                        resized2.getPixel(i,j,k) = image2(old_w,old_h,k);
+                    }
+                    
+                }
+            }
+            Image res(new_width , new_height);
+            for(int i=0 ; i < new_width ;i++ )
+            {
+                for(int j=0 ; j < new_height ;j++)
+                {
+                    for(int k=0 ; k < 3 ;k++)
+                    {
+                        res.getPixel(i,j,k) = (resized1(i,j,k) + resized2(i,j,k)) / 2;
+                    }
+                }
+            }
+            image1 = res;
+            cout << "Image resized and merged successfully!\n";
+        }
+        else if (choice == 2)
+        {
+           int new_width = min(image1.width,image2.width);
+           int new_height = min(image1.height,image2.height);
+           Image res(new_width,new_height);
+           for(int i=0 ; i < new_width ; i++ )
+           {
+            for(int j=0 ; j < new_height ; j++)
+            {
+                for(int k=0 ; k < 3 ; k++)
+                {
+                    res.getPixel(i,j,k) = (image1(i,j,k) + image2(i,j,k)) / 2 ;
+                }
+            }
+           }
+           image1 = res;
+           cout << "Common area merged successfully!\n";
+        }
+        else 
+        {
+            cout << "Error in inputs , please try again!\n";
+        }
+        
+    }
+}
+void Sunlight(Image &image){
+    for(int i=0 ; i < image.width ; i++)
+    {
+        for(int j=0 ; j < image.height ; j++)
+        {
+          image.getPixel(i,j,0) = min(255,image.getPixel(i,j,0) + 50);
+          image.getPixel(i,j,1) = min(255,image.getPixel(i,j,1) + 50);
+          image.getPixel(i,j,2) = max(0,image.getPixel(i,j,2) - 20); 
+        }
+    }
+    cout <<"Sunlight effect applied successfully!\n";
+}
+void Skew(Image& image)
+{
+    double angle;
+
+    cout << "Enter angle (-45 to 45): ";
+    cin >> angle;
+
+    if (angle < -45 || angle > 45)
+    {
+        cout << "Error in inputs, please try again!\n";
+        return;
+    }
+
+    double radians = angle * 3.141592653589793 / 180;
+
+    int shiftAmount = abs((int)(image.height * tan(radians)));
+
+    int newWidth = image.width + shiftAmount;
+
+    Image result(newWidth, image.height);
+
+    
+    for (int i = 0; i < result.width; i++)
+    {
+        for (int j = 0; j < result.height; j++)
+        {
+            for (int k = 0; k < 3; k++)
+            {
+                result.getPixel(i, j, k) = 0;
+            }
+        }
+    }
+
+    
+    for (int j = 0; j < image.height; j++)
+    {
+        double shift = j * tan(radians);
+
+        for (int i = 0; i < image.width; i++)
+        {
+            int newI;
+
+            if (angle >= 0)
+            {
+                newI = i - (int)shift + shiftAmount;
+            }
+            else
+            {
+                newI = i - (int)shift;
+            }
+
+            if (newI >= 0 && newI < result.width)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    result.getPixel(newI, j, k) =
+                        image.getPixel(i, j, k);
+                }
+            }
+        }
+    }
+
+    image = result;
+
+    cout << "Image skewed successfully!\n";
+}
 int main()
 {
     cout << "Welcome To Baby Photoshop!\n";
@@ -554,7 +739,32 @@ int main()
                     resize (image);
                 }
                 break;
-            case 10:{
+            case 10:
+                if(!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                }  else {
+                    string filename2 ;
+                    cout << "Enter second image filename:\n";
+                    getline(cin >> ws,filename2);
+                    Image image2(filename2);
+                    Merge(image,image2);
+                }  
+                break;
+            case 14:
+               if (!Is_Image_Loaded) {
+                   cout << "Please load an imaage at first!\n";
+               } else {
+                   Sunlight(image);
+               } 
+               break;
+            case 18:
+               if(!Is_Image_Loaded) {
+                  cout << "please laoad an image at first!\n";
+               } else {
+                  Skew(image);
+               } 
+                break;     
+            case 20:{
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
@@ -567,7 +777,7 @@ int main()
                 }
                 break;
             }
-            case 11:
+            case 21:
                 cout << "Exiting the program!\n";
                 running = false;
                 break;
