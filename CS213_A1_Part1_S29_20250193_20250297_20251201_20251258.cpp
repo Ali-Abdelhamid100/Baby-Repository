@@ -1,49 +1,6 @@
-/*
-====================================================================================================
-* Course Code: CS213 - Object-Oriented Programming
-* Assignment: Assignment 1 (First Submission)
-* Submission Date: 1 October 2026
-* Submitted To: Dr Mohammad El-Ramly
-* Section: S29, S30
-* TA: Mennat Allah Mamdouh
-* Institution: Faculty of Computing and Artificial Intelligence, Cairo University
--------------------------------------------------
-# Students informations:
- 1. Habiba Nader Hussein Ali          20250193 
- 2. Sama Mounir Mohamed Mohamed       20250297
- 3. Seif El-Deen Ismail Mostafa       20251201
- 4. Ali Abdelhamid Ali Abdelhamid     20251258
--------------------------------------------------
-# File Desciption:
- This cpp File includes: The 8 required core Filters for the first submission of Assignment 1
- ,and Main Menu that supports image loading, Processing, and Exiting the program.
- * Menu Options & Filters:
- 1. Load New Image
- 2. Grayscale
- 3. Black & White
- 4. Invert Colors
- 5. Add Frame
- 6. Flip Image
- 7. Rotate Image
- 8. Darken / Light
- 9. Resize Image
- 10. Save Image
- 11. Exit
--------------------------------------------------
-# Filters Distribution:
- 1,5 --> Habiba Nader Hussein Ali
- 2,6 --> Sama Mounir Mohamed Mohamed
- 3,7 --> Seif El-Deen Ismail Mostafa
- 4,8 --> Ali Abdelhamid Ali Abdelhamid
--------------------------------------------------
-# Addtional Tasks:
- Main Menu --> All the members
- GitHub Repository Commits --> All the members
-====================================================================================================
-*/
-
 #include <iostream>
 #include <fstream>
+#include <utility>
 #include <string>
 #include "Image_Class.h"
 using namespace std;
@@ -61,23 +18,33 @@ void Starting_Menu () {
     cout << "7. Rotate\n";
     cout << "8. Darken / Lighten\n";
     cout << "9. Resize\n";
-    cout << "10. Save\n";
-    cout << "11. Exit\n";
+    cout << "10. Merge\n";
+    cout << "11. Edge Detection\n";
+    cout << "12. Crop\n";
+    cout << "13. Blur\n";
+    cout << "14. Sunlight\n";
+    cout << "15. Tv Images\n";
+    cout << "16. Purple\n";
+    cout << "17. Infrared\n";
+    cout << "18. Skewing\n";
+    cout << "19. Oil Painting\n";
+    cout << "20. Save\n";
+    cout << "21. Exit\n";
 }
 
 void grayScale (Image& image) {
 
     for (int i = 0 ; i < image.width ; i++) {
         for (int j = 0 ; j < image.height ; j++) {
-            unsigned int avg = 0 ;
+            unsigned int avg = 0;
 
-            for (int k=0 ; k < image.channels ; k++) {
+            for (int k = 0 ; k < image.channels ; k++) {
                avg += image(i,j,k);
             }
             avg /= 3;
 
-            image.getPixel(i,j,0)= avg;
-            image.getPixel(i,j,1)= avg;
+            image.getPixel(i,j,0) = avg;
+            image.getPixel(i,j,1) = avg;
             image.getPixel(i,j,2) = avg;
         }
     }
@@ -240,14 +207,10 @@ void Add_frame (Image& image) {
         frame1Size /= 6;
         for (int i = 0 ; i < image.width ; i++) {
             for (int j = 0 ; j < image.height ; j++) {
-                if ((i <= frame1Size + 1) && (j < frame1Size + 1)
-                ||  (i <= frame1Size + 1) && (j > image.height - (frame1Size + 1))
-                ||  (i >= image.width - (frame1Size + 1)) && (j < frame1Size + 1)
-                ||  (i >= image.width - (frame1Size + 1)) && (j > image.height - (frame1Size + 1))
-                ||  (j <= frame1Size + 1) && (i < frame1Size + 1)
-                ||  (j <= frame1Size + 1) && (i > image.width - (frame1Size + 1))
-                ||  (j >= image.height - (frame1Size + 1)) && (i < frame1Size + 1)
-                ||  (j >= image.height - (frame1Size + 1)) && (i > image.width - (frame1Size + 1))) {
+                if ((i < frame1Size + 1) && (j < frame1Size + 1)
+                ||  (i < frame1Size + 1) && (j > image.height - (frame1Size + 1))
+                ||  (i > image.width - (frame1Size + 1)) && (j < frame1Size + 1)
+                ||  (i > image.width - (frame1Size + 1)) && (j > image.height - (frame1Size + 1))) {
                     image.getPixel(i,j,0) = 255;
                     image.getPixel(i,j,1) = 255;
                     image.getPixel(i,j,2) = 255;
@@ -446,6 +409,62 @@ void resize (Image& image) {
     cout << "Image is resized successfully!\n";
 }
 
+
+
+void purple (Image& image) {
+    float red_factor = 0.08;
+    float green_factor = 0.15;
+    float blue_factor = 0.18;
+    for (int i = 0; i < image.width; i++) {
+        for (int j = 0; j < image.height; j++) {
+            float red = image(i, j, 0) + ((255-image(i, j, 0)) * red_factor);
+            float green = image(i, j, 1) * (1 - green_factor);
+            float blue = image(i, j, 2) + ((255-image(i, j, 2)) * blue_factor);
+            if (red > 255) red = 255;
+            if (red < 0) red = 0;
+            if (green > 255) green = 255;
+            if (green < 0) green = 0;
+            if (blue > 255) blue = 255;
+            if (blue < 0) blue = 0;
+            image(i, j, 0) = static_cast<unsigned char> (red);
+            image(i, j, 1) = static_cast<unsigned char> (green);
+            image(i, j, 2) = static_cast<unsigned char> (blue);
+        }
+    }
+    cout << "Purple filter is applied successfully!\n";
+}
+
+void Blur (Image& image, int radius = 15) {
+    Image img = image;
+    for (int i = 0 ; i < image.width ; i++) {
+        for (int j = 0 ; j < image.height ; j++) {
+            unsigned int R_avg = 0;
+            unsigned int G_avg = 0;
+            unsigned int B_avg = 0;
+            int cnt = 0;
+            for (int a = i - radius ; a <= i + radius  ; a++) {
+                for (int b = j - radius ; b <= j + radius ; b++) {
+                    if (a >= 0 && a < image.width && b >= 0 && b < image.height) {
+                        R_avg += img(a,b,0);
+                        G_avg += img(a,b,1);
+                        B_avg += img(a,b,2);
+                        cnt++;
+                    }
+                }
+            }
+            R_avg /= cnt;
+            G_avg /= cnt;
+            B_avg /= cnt;
+            image.getPixel(i,j,0) = R_avg;
+            image.getPixel(i,j,1) = G_avg;
+            image.getPixel(i,j,2) = B_avg;
+        }
+    }
+    cout << "Blur is applied successfully!\n";
+}
+
+
+
 int main()
 {
     cout << "Welcome To Baby Photoshop!\n";
@@ -554,7 +573,77 @@ int main()
                     resize (image);
                 }
                 break;
-            case 10:{
+            case 10:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    
+                }
+                break;
+            case 11:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    
+                }
+                break;
+            case 12:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    
+                }
+                break;
+            case 13:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    Blur (image);
+                }
+                break;
+            case 14:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    
+                }
+                break;
+            case 15:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    
+                }
+                break;
+            case 16:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    purple (image);
+                }
+                break;
+            case 17:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    
+                }
+                break;
+            case 18:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    
+                }
+                break;
+            case 19:
+                if (!Is_Image_Loaded) {
+                    cout << "Please load an image at first!\n";
+                } else {
+                    
+                }
+                break;
+            case 20: {
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
@@ -567,7 +656,7 @@ int main()
                 }
                 break;
             }
-            case 11:
+            case 21:
                 cout << "Exiting the program!\n";
                 running = false;
                 break;
