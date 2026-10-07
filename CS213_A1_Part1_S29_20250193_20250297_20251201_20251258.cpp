@@ -2,12 +2,9 @@
 #include <fstream>
 #include <utility>
 #include <string>
-#include <cmath>
-#include <algorithm>
-#include "Image_Class.h"
 #include <sstream>
 #include <stdlib.h>
-#include <cmath>
+#include "Image_Class.h"
 using namespace std;
 
 void Starting_Menu () {
@@ -414,6 +411,28 @@ void resize (Image& image) {
     cout << "Image is resized successfully!\n";
 }
 
+void crop (Image& image) {
+    int new_width, new_height, x, y;
+    cout << "Enter the x and y coordinates of the top-left corner:\n";
+    cin >> x >> y;
+    cout << "Enter the new width and height respectively:\n";
+    cin >> new_width >> new_height;
+    Image cropped_image(new_width, new_height);
+    if (x >= 0 && y >= 0 && x + new_width <= image.width && y + new_height <= image.height) {
+        for (int i = 0; i < new_width; i++) {
+            for (int j = 0; j < new_height; j++) {
+                for (int k = 0; k < image.channels; k++) {
+                    cropped_image(i, j, k) = image(x + i, y + j, k);
+                }
+            }
+        }
+        image = cropped_image;
+        cout << "Image is cropped successfully!\n";
+    } else {
+        cout << "Error in the inputs, please try again!\n";
+    }
+}
+
 void Merge(Image &image1 , Image &image2){
     if(image1.width == image2.width && image1.height == image2.height){
         Image res(image1.width,image1.height);
@@ -564,7 +583,7 @@ void detect_edges(Image& image){
     cout << "Image edges are detected successfully!\n";
 } 
 
-void addNoise(Image& image, int noiseLevel){
+void  addNoise(Image& image, int noiseLevel){
     for(int i = 0; i < image.width; i++){
         for(int j = 0; j < image.height; j++){
             for(int k = 0; k < image.channels; k++){
@@ -667,7 +686,7 @@ void old_tv_image(Image& image){
     cout << "Image is converted to old tv image successfully!\n";
 }
 
-void Skew (Image& image)
+void Skew(Image& image)
 {
     double angle;
 
@@ -700,6 +719,7 @@ void Skew (Image& image)
         }
     }
 
+    
     for (int j = 0; j < image.height; j++)
     {
         double shift = j * tan(radians);
@@ -731,28 +751,6 @@ void Skew (Image& image)
     image = result;
 
     cout << "Image skewed successfully!\n";
-}
-
-void crop (Image& image) {
-    int new_width, new_height, x, y;
-    cout << "Enter the x and y coordinates of the top-left corner:\n";
-    cin >> x >> y;
-    cout << "Enter the new width and height respectively:\n";
-    cin >> new_width >> new_height;
-    Image cropped_image(new_width, new_height);
-    if (x >= 0 && y >= 0 && x + new_width <= image.width && y + new_height <= image.height) {
-        for (int i = 0; i < new_width; i++) {
-            for (int j = 0; j < new_height; j++) {
-                for (int k = 0; k < image.channels; k++) {
-                    cropped_image(i, j, k) = image(x + i, y + j, k);
-                }
-            }
-        }
-        image = cropped_image;
-        cout << "Image is cropped successfully!\n";
-    } else {
-        cout << "Error in the inputs, please try again!\n";
-    }
 }
 
 void purple (Image& image) {
@@ -826,6 +824,7 @@ void Infrared (Image& image) {
     }
     cout << "Infrared is applied successfully!\n";
 }
+
 
 void oilPainting (Image& image) {
     for (int i = 0 ; i < image.width ; i++) {
@@ -926,6 +925,7 @@ int main()
                         Is_Ext_valid = true;
                     }
                 }
+
                 if (Is_Ext_valid) {
                     image.loadNewImage(filename);
                     Is_Image_Loaded = true;
@@ -939,63 +939,63 @@ int main()
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    grayScale(image);
+                    grayScale (image);
                 }
                 break;
             case 3:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    black_and_white(image);
+                    black_and_white (image);
                 }
                 break;
             case 4:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    invert(image);
+                    invert (image);
                 }
                 break;
             case 5:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Add_frame(image);
+                    Add_frame (image);
                 }
                 break;
             case 6:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    flipImage(image);
+                    flipImage (image);
                 }
                 break;
             case 7:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Rotate(image);
+                    Rotate (image);
                 }
                 break;
             case 8:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    darken_lighten(image);
+                    darken_lighten (image);
                 }
                 break;
             case 9:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    resize(image);
+                    resize (image);
                 }
                 break;
             case 10:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    string filename2 ;
+                    string filename2;
                     cout << "Enter second image filename:\n";
                     getline(cin >> ws,filename2);
                     Image image2(filename2);
@@ -1006,65 +1006,65 @@ int main()
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    detect_edges(image);
+                    detect_edges (image);
                 }
                 break;
             case 12:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    crop(image);
+                    crop (image);
                 }
                 break;
             case 13:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Blur(image);
+                    Blur (image);
                 }
                 break;
             case 14:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Sunlight(image);
+                    Sunlight (image);
                 }
                 break;
             case 15:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    old_tv_image(image);
+                    old_tv_image (image);
                 }
                 break;
             case 16:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    purple(image);
+                    purple (image);
                 }
                 break;
             case 17:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Infrared(image);
+                    Infrared (image);
                 }
                 break;
             case 18:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Skew(image);
+                    Skew (image);
                 }
                 break;
             case 19:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    oilPainting(image);
+                    oilPainting (image);
                 }
-                break; 
+                break;
             case 20: {
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
@@ -1073,20 +1073,8 @@ int main()
                     cout << "and with one of the following extensions: .jpg, .bmp, .png, .jpeg .tga\n";
 
                     cin >> filename;
-                    bool Is_Ext_valid = false;
-                    size_t Dot_Ind = filename.find_last_of(".");
-                    if (Dot_Ind != string::npos) {
-                        string ext = filename.substr(Dot_Ind);
-                        if (ext == ".jpeg" || ext == ".jpg" || ext == ".png" || ext == ".bmp" || ext == ".tga") {
-                            Is_Ext_valid = true;
-                        }
-                    }
-                    if (Is_Ext_valid) {
-                        image.saveImage(filename);
-                        cout << "Your new image is saved successfully!\n";
-                    } else {
-                        cout << "Invalid file extension!\n";
-                    }
+                    image.saveImage(filename);
+                    cout << "Your new image is saved successfully!\n";
                 }
                 break;
             }
