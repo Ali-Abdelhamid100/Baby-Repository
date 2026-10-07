@@ -939,135 +939,130 @@ int main()
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    grayScale (image);
+                    grayScale(image);
                 }
                 break;
             case 3:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    black_and_white (image);
+                    black_and_white(image);
                 }
                 break;
             case 4:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    invert (image);
+                    invert(image);
                 }
                 break;
             case 5:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Add_frame (image);
+                    Add_frame(image);
                 }
                 break;
             case 6:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    flipImage (image);
+                    flipImage(image);
                 }
                 break;
             case 7:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Rotate (image);
+                    Rotate(image);
                 }
                 break;
             case 8:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    darken_lighten (image);
+                    darken_lighten(image);
                 }
                 break;
             case 9:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    resize (image);
+                    resize(image);
                 }
                 break;
             case 10:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
-                }
-                else {
+                } else {
                     string filename2 ;
                     cout << "Enter second image filename:\n";
                     getline(cin >> ws,filename2);
                     Image image2(filename2);
-                    Merge (image,image2);
+                    Merge(image,image2);
                 }
                 break;
             case 11:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    detect_edges (image);
+                    detect_edges(image);
                 }
                 break;
             case 12:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    crop (image);
+                    crop(image);
                 }
                 break;
             case 13:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Blur (image);
+                    Blur(image);
                 }
                 break;
             case 14:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Sunlight (image);
+                    Sunlight(image);
                 }
                 break;
             case 15:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    old_tv_image (image);
+                    old_tv_image(image);
                 }
                 break;
             case 16:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    purple (image);
+                    purple(image);
                 }
                 break;
             case 17:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Infrared (image);
+                    Infrared(image);
                 }
                 break;
             case 18:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
                 } else {
-                    Skew (image);
+                    Skew(image);
                 }
                 break;
             case 19:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
-                }
-                break;
-                if(!Is_Image_Loaded) {
-                    cout << "Please load an image at first!\n";
                 } else {
-                    oilPainting (image);
+                    oilPainting(image);
                 }
                 break; 
             case 20: {
@@ -1078,8 +1073,20 @@ int main()
                     cout << "and with one of the following extensions: .jpg, .bmp, .png, .jpeg .tga\n";
 
                     cin >> filename;
-                    image.saveImage(filename);
-                    cout << "Your new image is saved successfully!\n";
+                    bool Is_Ext_valid = false;
+                    size_t Dot_Ind = filename.find_last_of(".");
+                    if (Dot_Ind != string::npos) {
+                        string ext = filename.substr(Dot_Ind);
+                        if (ext == ".jpeg" || ext == ".jpg" || ext == ".png" || ext == ".bmp" || ext == ".tga") {
+                            Is_Ext_valid = true;
+                        }
+                    }
+                    if (Is_Ext_valid) {
+                        image.saveImage(filename);
+                        cout << "Your new image is saved successfully!\n";
+                    } else {
+                        cout << "Invalid file extension!\n";
+                    }
                 }
                 break;
             }
