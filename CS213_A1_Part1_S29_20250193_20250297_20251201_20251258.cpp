@@ -460,6 +460,49 @@ void resize (Image& image) {
     image = resized_image;
     cout << "Image is resized successfully!\n";
 }
+void crop (Image& image) {
+    int new_width, new_height, x, y;
+    cout << "Enter the x and y coordinates of the top-left corner:\n";
+    cin >> x >> y;
+    cout << "Enter the new width and height respectively:\n";
+    cin >> new_width >> new_height;
+    Image cropped_image(new_width, new_height);
+    if (x >= 0 && y >= 0 && x + new_width <= image.width && y + new_height <= image.height) {
+        for (int i = 0; i < new_width; i++) {
+            for (int j = 0; j < new_height; j++) {
+                for (int k = 0; k < image.channels; k++) {
+                    cropped_image(i, j, k) = image(x + i, y + j, k);
+                }
+            }
+        }
+        image = cropped_image;
+        cout << "Image is cropped successfully!\n";
+    } else {
+        cout << "Error in the inputs, please try again!\n";
+    }
+}
+void purple (Image& image) {
+    float red_factor = 0.08;
+    float green_factor = 0.15;
+    float blue_factor = 0.18;
+    for (int i = 0; i < image.width; i++) {
+        for (int j = 0; j < image.height; j++) {
+            float red = image(i, j, 0) + ((255-image(i, j, 0)) * red_factor);
+            float green = image(i, j, 1) * (1 - green_factor);
+            float blue = image(i, j, 2) + ((255-image(i, j, 2)) * blue_factor);
+            if (red > 255) red = 255;
+            if (red < 0) red = 0;
+            if (green > 255) green = 255;
+            if (green < 0) green = 0;
+            if (blue > 255) blue = 255;
+            if (blue < 0) blue = 0;
+            image(i, j, 0) = static_cast<unsigned char> (red);
+            image(i, j, 1) = static_cast<unsigned char> (green);
+            image(i, j, 2) = static_cast<unsigned char> (blue);
+        }
+    }
+    cout << "Purple filter is applied successfully!\n";
+}
 
 void Merge(Image &image1 , Image &image2){
     if(image1.width == image2.width && image1.height == image2.height){
@@ -823,7 +866,6 @@ int main()
                         Is_Ext_valid = true;
                     }
                 }
-
                 if (Is_Ext_valid) {
                     image.loadNewImage(filename);
                     Is_Image_Loaded = true;
@@ -911,6 +953,8 @@ int main()
             case 12:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
+                } else {
+                    crop(image);
                 }
                 break;
             case 13:
@@ -936,6 +980,8 @@ int main()
             case 16:
                 if (!Is_Image_Loaded) {
                     cout << "Please load an image at first!\n";
+                } else{
+                    purple(image);
                 }
                 break;
             case 17:
