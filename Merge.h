@@ -5,6 +5,6 @@
 #include "Image_Class.h"
 
 // تعريف فانكشن فلتر الـ Merge وتستقبل كائن الصورة بالمرجع (Reference)
-void Merge (Image &image1 , Image &image2)
+void Merge (Image &image1 , Image &image2);
 
 #endif // MERGE_H
