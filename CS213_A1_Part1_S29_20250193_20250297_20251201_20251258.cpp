@@ -5,24 +5,7 @@
 #include <sstream>
 #include <stdlib.h>
 #include "Image_Class.h"
-#include "Grayscale.h"
-#include "BlackAndWhite.h"
-#include "invert.h"
-#include "AddFrame.h"
-#include "FlipImage.h"
-#include "Rotate.h"
-#include "DarkenLighten.h"
-#include "Resize.h"
-#include "Crop.h"
-#include "Merge.h"
-#include "Sunlight.h"
-#include "DetectEdges.h"
-#include "OldTVImages.h"
-#include "Skew.h"
-#include "Purple.h"
-#include "Blur.h"
-#include "Infrared.h"
-#include "OilPainting.h"
+#include "Filters.h"
 
 using namespace std;
 
